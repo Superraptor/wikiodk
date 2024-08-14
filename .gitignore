@@ -1,2 +1,9 @@
+target
+__pycache__
+
 target/*
 __pycache__/*
+
+uris.pkl
+SynchronizationTest.ipynb
+requirements.txt
