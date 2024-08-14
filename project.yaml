@@ -2,4 +2,22 @@ id: ontowikipoc
 title: OntoWiki Proof-of-Concept Ontology
 github_org: Superraptor
 repo: ontowikipoc
-wikibase_public_host: localhost
+wikibase:
+  wikibase_public_host: localhost
+  packages:
+    - zip
+  extensions:
+    - CirrusSearch
+    - Elastica
+    - JsonConfig
+    - Kartographer
+    - WikibaseQualityConstraints
+  import:
+    - hhear_properties.ttl
+    - study-design-data.ttl
+  adapter:
+    default_lang: 'en'
+  string_limits:
+    string: 2000
+    monolingual_text: 2000
+    multilang: 2000

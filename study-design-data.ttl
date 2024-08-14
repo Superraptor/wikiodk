@@ -1,0 +1,357 @@
+@prefix afn:                          <http://jena.hpl.hp.com/ARQ/function#> .
+@prefix arg:                          <http://spinrdf.org/arg#> .
+@prefix bd:                           <http://www.bigdata.com/rdf#> .
+@prefix bds:                          <http://www.bigdata.com/rdf/search#> .
+@prefix cedar_inference_graph:        <http://example.org/data-graphs/Cedar_Inference_Graph#> .
+@prefix cedar_kg_shapes:              <http://example.org/ontologies/CedarKgSHAPES#> .
+@prefix cedar_template_instances:     <http://example.org/data-graphs/CedarTemplateInstances#> .
+@prefix chear:                        <http://hadatac.org/ont/chear#> .
+@prefix chear-kb:                     <http://hadatac.org/kb/chear#> .
+@prefix chebi:                        <http://purl.obolibrary.org/obo/chebi/> .
+@prefix chebi1:                       <http://purl.obolibrary.org/obo/chebi#> .
+@prefix chebi3:                       <http://purl.obolibrary.org/obo/chebi#3> .
+@prefix chebi4:                       <http://purl.obolibrary.org/obo/chebi#2> .
+@prefix chebi5:                       <http://purl.obolibrary.org/obo/chebi#3> .
+@prefix chebi6:                       <http://purl.obolibrary.org/obo/chebi#1> .
+@prefix cito:                         <http://purl.org/spar/cito/> .
+@prefix cl:                           <http://purl.obolibrary.org/obo/cl#> .
+@prefix cmo:                          <http://purl.obolibrary.org/obo/cmo.obo#> .
+@prefix cogat:                        <http://www.cognitiveatlas.org/ontology/cogat.owl#> .
+@prefix cogpo:                        <http://www.cogpo.org/ontologies/working/CogPOver2011.owl#> .
+@prefix core:                         <http://purl.obolibrary.org/obo/uberon/core#> .
+@prefix corpus:                       <http://topbraid.org/corpus#> .
+@prefix crosswalk:                    <http://topbraid.org/crosswalk#> .
+@prefix crosswalk.spin:               <http://topbraid.org/crosswalk.spin#> .
+@prefix crosswalkapp:                 <http://topbraid.org/swa/crosswalkapp#> .
+@prefix crosswalkprojects:            <http://teamwork.topbraidlive.org/crosswalkprojects#> .
+@prefix daml:                         <http://www.daml.org/2001/03/daml+oil#> .
+@prefix dash:                         <http://datashapes.org/dash#> .
+@prefix dc:                           <http://purl.org/dc/elements/1.1/> .
+@prefix dcam:                         <http://purl.org/dc/dcam/> .
+@prefix dct:                          <http://purl.org/dc/terms/> .
+@prefix dcterms:                      <http://purl.org/dc/terms/> .
+@prefix debug-swa:                    <http://debug.topbraidlive.org/1.0/swa/> .
+@prefix disease_ontology:             <http://purl.obolibrary.org/obo/doid.owl#> .
+@prefix doap:                         <http://usefulinc.com/ns/doap#> .
+@prefix doid:                         <http://purl.obolibrary.org/obo/doid#> .
+@prefix edg:                          <http://edg.topbraid.solutions/model/> .
+@prefix efo:                          <http://www.ebi.ac.uk/efo/> .
+@prefix evnconstraints:               <http://topbraid.org/spin/evnconstraints#> .
+@prefix fn:                           <http://www.w3.org/2005/xpath-functions#> .
+@prefix foaf:                         <http://xmlns.com/foaf/0.1/> .
+@prefix go:                           <http://purl.obolibrary.org/obo/go#> .
+@prefix governance:                   <http://topbraid.org/teamworkgovernance.ui#> .
+@prefix graphql:                      <http://datashapes.org/graphql#> .
+@prefix hasco:                        <http://hadatac.org/ont/hasco/> .
+@prefix hasneto:                      <http://hadatac.org/ont/hasneto#> .
+@prefix hhear:                        <http://purl.org/twc/HHEAR_> .
+@prefix hhearkb:                      <http://hadatac.org/kb/hhear#> .
+@prefix hint:                         <http://www.bigdata.com/queryHints#> .
+@prefix html:                         <http://uispin.org/html#> .
+@prefix jfn:                          <java:org.apache.jena.sparql.function.library.> .
+@prefix lib-importer:                 <http://edg.topbraid.solutions/importer/lib#> .
+@prefix list:                         <http://jena.apache.org/ARQ/list#> .
+@prefix mesh:                         <http://purl.bioontology.org/ontology/MESH/> .
+@prefix metadata:                     <http://topbraid.org/metadata#> .
+@prefix ncbitaxon:                    <http://purl.obolibrary.org/obo/ncbitaxon#> .
+@prefix nlp:                          <http://topbraid.org/nlp#> .
+@prefix obo:                          <http://purl.obolibrary.org/obo/> .
+@prefix obo1:                         <http://data.bioontology.org/metadata/obo/> .
+@prefix obo2:                         <http://data.bioontology.org/metadata/obo/> .
+@prefix obo3:                         <http://www.geneontology.org/formats/oboInOwl#http://purl.obolibrary.org/obo/> .
+@prefix oboInOWL:                     <http://www.geneontology.org/formats/oboInOWL#> .
+@prefix oboInOwl:                     <http://www.geneontology.org/formats/oboInOwl#> .
+@prefix oboInOwl1:                    <http://geneontology.org/formats/oboInOwl#> .
+@prefix ontologyprojects:             <http://teamwork.topbraidlive.org/ontologyprojects#> .
+@prefix oslc:                         <http://open-services.net/ns/core#> .
+@prefix owl:                          <http://www.w3.org/2002/07/owl#> .
+@prefix owlrl:                        <http://topbraid.org/spin/owlrl#> .
+@prefix pato:                         <http://purl.obolibrary.org/obo/pato#> .
+@prefix pav:                          <http://purl.org/pav/> .
+@prefix pf:                           <http://jena.hpl.hp.com/ARQ/property#> .
+@prefix phenotype_and_trait_ontology: <http://purl.obolibrary.org/obo/pato.owl#> .
+@prefix pr:                           <http://purl.obolibrary.org/obo/pr#> .
+@prefix protege:                      <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix prov:                         <http://www.w3.org/ns/prov/> .
+@prefix prv:                          <http://hadatac.org/ont/prov#> .
+@prefix pubchem:                      <http://rdf.ncbi.nlm.nih.gov/pubchem/compound/> .
+@prefix pubchem2:                     <http://pubchem.ncbi.nlm.nih.gov/compound/> .
+@prefix rdf:                          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:                         <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdmprojects:                  <http://rdm.topbraidlive.org/rdmprojects#> .
+@prefix safindex:                     <http://topbraid.org/safindex#> .
+@prefix scheduler:                    <http://topbraid.org/scheduler#> .
+@prefix schema:                       <http://schema.org/> .
+@prefix sesame:                       <http://www.openrdf.org/schema/sesame#> .
+@prefix sh:                           <http://www.w3.org/ns/shacl#> .
+@prefix sharepoint-termstore:         <http://teamwork.topbraidlive.org/taxonomy/sharepoint-termstore#> .
+@prefix sio:                          <http://semanticscience.org/resource/> .
+@prefix sio_ontology:                 <http://semanticscience.org/ontology/sio.owl#> .
+@prefix skos:                         <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosshapes:                   <http://topbraid.org/skos.shapes#> .
+@prefix skosspin:                     <http://topbraid.org/spin/skosspin#> .
+@prefix skostemplate:                 <http://topbraid.org/spin/skostemplates#> .
+@prefix skosxl:                       <http://www.w3.org/2008/05/skos-xl#> .
+@prefix sm:                           <http://topbraid.org/sparqlmotion#> .
+@prefix smf:                          <http://topbraid.org/sparqlmotionfunctions#> .
+@prefix sml:                          <http://topbraid.org/sparqlmotionlib#> .
+@prefix snp:                          <https://www.ncbi.nlm.nih.gov/snp/> .
+@prefix sp:                           <http://spinrdf.org/sp#> .
+@prefix spif:                         <http://spinrdf.org/spif#> .
+@prefix spin:                         <http://spinrdf.org/spin#> .
+@prefix spinmap:                      <http://spinrdf.org/spinmap#> .
+@prefix spinmapl:                     <http://topbraid.org/spin/spinmapl#> .
+@prefix spl:                          <http://spinrdf.org/spl#> .
+@prefix spr:                          <http://spinrdf.org/spr#> .
+@prefix spra:                         <http://spinrdf.org/spra#> .
+@prefix stato:                        <http://purl.obolibrary.org/obo/stato.owl#> .
+@prefix subsets:                      <http://purl.obolibrary.org/obo/ro/subsets#> .
+@prefix swa:                          <http://topbraid.org/swa#> .
+@prefix swaclasses:                   <http://topbraid.org/swaclasses#> .
+@prefix swauml:                       <http://topbraid.org/swauml#> .
+@prefix swon:                         <http://uispin.org/swon#> .
+@prefix swrl:                         <http://www.w3.org/2003/11/swrl#> .
+@prefix swrla:                        <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#> .
+@prefix swrlb:                        <http://www.w3.org/2003/11/swrlb#> .
+@prefix tables:                       <http://topbraid.org/tables#> .
+@prefix tablesmap:                    <http://topbraid.org/spin/tablesmap#> .
+@prefix tasks:                        <http://topbraid.org/tasks#> .
+@prefix tbgeo:                        <http://topbraid.org/tbgeo#> .
+@prefix tbladmin:                     <http://server.topbraidlive.org/system-applications/tbladmin#> .
+@prefix teamwork:                     <http://topbraid.org/teamwork#> .
+@prefix teamworkconstraints:          <http://topbraid.org/teamworkconstraints#> .
+@prefix teamworks3:                   <http://teamwork.topbraidlive.org/ui/teamworks3#> .
+@prefix teamworkupdate:               <http://teamworkAPI.topbraid.com/teamworkUpdate#> .
+@prefix textindex:                    <http://topbraid.org/textindex#> .
+@prefix time:                         <http://www.w3.org/2006/time#> .
+@prefix tops:                         <http://www.topbraid.org/tops#> .
+@prefix tosh:                         <http://topbraid.org/tosh#> .
+@prefix tosh.ui:                      <http://topbraid.org/tosh.ui#> .
+@prefix tracker:                      <http://teamwork.topbraidlive.org/ui/tracker#> .
+@prefix twc:                          <http://purl.org/twc/> .
+@prefix uberon:                       <http://purl.obolibrary.org/obo/uberon#> .
+@prefix ubprop:                       <http://purl.obolibrary.org/obo/ubprop#> .
+@prefix ui:                           <http://uispin.org/ui#> .
+@prefix uix:                          <http://topbraidlive.org/uix#> .
+@prefix uniprot:                      <http://www.uniprot.org/uniprot/> .
+@prefix units_ontology:               <http://purl.obolibrary.org/obo/uo.owl#> .
+@prefix vann:                         <http://purl.org/vocab/vann/> .
+@prefix void:                         <http://rdfs.org/ns/void#> .
+@prefix vstoi:                        <http://hadatac.org/ont/vstoi#> .
+@prefix wd:                           <http://www.wikidata.org/entity/> .
+@prefix xml:                          <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:                          <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsp:                          <http://www.owl-ontologies.com/2005/08/07/xsp.owl#> .
+
+hhearkb:STD-2018-2120
+        rdf:type         hasco:Study ;
+        skos:definition  "Ventilator-associated pneumonia (VAP) is a serious complication in mechanically ventilated children, increasing risk of mortality and morbidities including prolonged intubation and intensive care unit stays. Limited understanding of the microbial and host factors associated with VAP has precluded development of truly effective prevention and treatment strategies. We hypothesized that specific ecological patterns of the airway microbiome precede VAP and that the interaction of viral infection, bacterial populations, and the balance between host immune activation and immune suppression play crucial roles in determining whether a given patient develops VAP. We investigated this hypothesis with a prospective observational study with longitudinal (daily) examination of the airway microbiome in high risk mechanically ventilated children together with simultaneous proteomic assessments of the host immune response. Study participants were enrolled from 2015-2017 from participating sites in the NICHD Collaborative Pediatric Critical Care Research Network (CPCCRN), including UCD/Childrens Hospital Colorado (Aurora, CO), UCSF Benioff Childrens Hospital (San Francisco, CA), UCLA Mattel Childrens Hospital (Los Angeles, CA), Childrens Hospital of Michigan (Detroit), Childrens Hospital of Philadelphia (Philadelphia, PA), Nationwide Childrens Hospital (Columbus, OH), Childrens National Medical Center (Washington, DC), University of Pittsburgh Childrens Hospital (Pittsburgh, PA). 455 subjects were enrolled between the ages of 31 days and 18 years. Subjects were followed throughout the hospital admission of their incident mechanical ventilation episode. The overall objective of the CHEAR project is to evaluate the effect of tobacco smoke exposure (TSE) and other environmental pollutant exposures on the composition and diversity of the bacteria in the lower airways in critically-ill, mechanically ventilated pediatric patients as well as the outcomes of these children." .
+
+hhearkb:STD-2016-1450
+        rdf:type         hasco:Study ;
+        skos:definition  "Urban environments are a poorly understood toxic environment for children with asthma. In order to develop effective therapies and interventions, improved characterization of exposures and exposure-health outcome relationships is needed. The Denver Asthma Panel Study (DAPS), which began in 2014, is the parent study for this CHEAR project. The goal of DAPS was to investigate the relationships between asthma-relevant environmental exposures and asthma severity in an urban cohort of children, ages 8-16 years, with exacerbation-prone asthma. Personal and bedroom environmental exposures (particulate matter < 10 micrometers in diameter, ozone, and nitrogen dioxide) and asthma severity outcomes (lung function, exacerbations, inflammation, and control) were measured seasonally over the course of one year in the Denver metro area. A total of 68 participants were enrolled: 56 exacerbation-prone asthmatics and 12 control participants without allergies or asthma. Combined, the participants were 35 female, 69 Latino/Hispanic, 10 American Indian/Alaskan Native, 1 Asian, 19 Black/African American, 46 white, and 13 more than one race. The median age and annual household income was 11 years and $20,000 to $24,999, respectively. The goal of our proposed CHEAR study is to expand our investigation of how asthma-relevant exposures (tobacco smoke, polycyclic aromatic hydrocarbons, phthalates, volatile organic compounds, and other exposure-related metabolites) impact asthma severity and biological responses (oxidative stress, cytokines, inflammatory markers, and other related metabolites)." .
+
+hhearkb:STD-2017-1945
+        rdf:type         hasco:Study ;
+        skos:definition  "The approved CHEAR project focuses on 250 participants from the Maternal and Developmental Risks from Environmental and Social Stressors (MADRES) study, which is a low-income predominately Hispanic pregnancy cohort in Los Angeles that was designed to evaluate the impacts of early life exposures to stress and environmental contaminants on obesity risk. The MADRES study began in 2015. Women and their infants are followed from early pregnancy through the first year of life. The objective of the approved CHEAR project is to investigate the impacts of prenatal metal mixture exposures on newborn methylation patterns and birth weight, an important risk factor for long-term health. The University of Michigan CHEAR Lab Hub will measure a panel of 21 metals in 1st and 3rd trimester urine samples and will additionally measure the cord blood CD4+ methylome, using whole genome bisulfite sequencing, in a smaller subset of participants (N = 30)." .
+
+hhearkb:STD-2016-1431
+        rdf:type          hasco:Study , twc:HHEAR_01359 ;
+        twc:HHEARP_00001  "2016-1431" ;
+        twc:HHEARP_00002  "Sex-Specific Omics Profiles Related to Toxicant Exposures in Children" ;
+        twc:HHEARP_00003  wd:Q230492 ;
+        twc:HHEARP_00004  twc:HHEAR_01367 ;
+        twc:HHEARP_00005  obo:NCIT_C39298 , obo:NCIT_C89345 ;
+        twc:HHEARP_00006  wd:Q96 ;
+        twc:HHEARP_00007  wd:Q2088 ;
+        twc:HHEARP_00008  510 ;
+        twc:HHEARP_00009  efo:EFO_0001941 , obo:UBERON_0012168 , obo:UBERON_0001088 ;
+        twc:HHEARP_00010  obo:DOID_9970 , obo:DOID_0014667 ;
+        twc:HHEARP_00011  obo:CHEBI_134179 , obo:CHEBI_26092 , twc:HHEAR_00363 , obo:CHEBI_15882 ;
+        twc:HHEARP_00013  obo:NCIT_C64253 , obo:NCIT_C64263 ;
+        twc:HHEARP_00014  "examine effects of toxicant exposures during three sensitive developmental timeframes – the prenatal period (during 1997-2004), early adolescence (8-14 years), and late adolescence (13-19 years) – on adiposity and metabolic risk in adolescence among participants of the Early Life Exposure to ENvironmental Toxicants (ELEMENT) Project, a Mexican birth cohort in Mexico City." ;
+        twc:HHEARP_00016  "Mexico City" ;
+        twc:HHEARP_00017  "Wei Perng" ;
+        twc:HHEARP_00018  <https://reporter.nih.gov/search/2NC9YrDMM0SiuN8TnuRgKg/project-details/10432260> ;
+        skos:definition   "The objective of this project is to examine effects of toxicant exposures during three sensitive developmental timeframes - the prenatal period (during 1997-2004), early adolescence (8-14 years), and late adolescence (13-19 years) - on adiposity and metabolic risk in adolescence among participants of the Early Life Exposure to ENvironmental Toxicants (ELEMENT) Project, a Mexican birth cohort in Mexico City. We leverage existing data on toxicant exposure during all three timeframes, including bisphenol A (BPA), metals and phthalates, and propose to measure polycyclic aromatic hydrocarbon (PAH) metabolites in archived urine samples from the mothers and children. Additionally, we will carry out genome-wide DNA methylation analysis in peripheral leukocytes at all three timeframes, and untargeted metabolomics analyses in fasting serum during late adolescence to gain insight into molecular pathways linking exposure to each of these toxicants singly and as mixtures to health outcomes during adolescence." .
+
+hhearkb:STD-2017-1740
+        rdf:type          hasco:Study , twc:HHEAR_01359 ;
+        twc:HHEARP_00001  "2017-1740" ;
+        twc:HHEARP_00002  "Mitochondrial DNA biomarkers of prenatal metal mixture exposure: integenerational inheritance and infant growth" ;
+        twc:HHEARP_00003  wd:Q49121 ;
+        twc:HHEARP_00004  twc:HHEAR_01366 ;
+        twc:HHEARP_00006  wd:Q30 , wd:Q771 ;
+        twc:HHEARP_00007  wd:Q1987 , wd:Q1985 , wd:Q2091 , wd:Q1988 ;
+        twc:HHEARP_00008  1096 ;
+        twc:HHEARP_00017  "Cardenas, Andres" ;
+        twc:HHEARP_00020  "R01-HD034568, UG3 OD023286" ;
+        skos:definition   "Project Viva is a prospective pre-birth cohort of mother-infant pairs, recruited in Eastern Massachusetts between 1999 and 2002 during the first prenatal visit at Atrius Harvard Vanguard Medical Associates. In-person visits with mothers were completed during the first (median 9.9 weeks of gestation) and second trimesters (median 27.9 weeks). We saw mothers and children in the hospital during the delivery admission and during infancy (median age 6.3 months). Follow-up visits have been completed in early childhood (median 3.2 years), mid-childhood (median 7.7 years), early adolescence (median 12.9 years) and currently a teenage follow-up visit is underway. Information was collected from mothers via interviews and questionnaires, performed anthropometric and neurodevelopmental assessments in children and collected bio-specimens in pregnancy and at each study visit. Our objective for this CHEAR project is to evaluate whether maternal prenatal exposure to metal mixtures in early pregnancy can disrupt molecular markers of mitochondrial DNA damage and abundance in mothers and children as a key mediator of metabolism and infant growth." .
+
+hhearkb:STD-2018-2537
+        rdf:type         hasco:Study ;
+        skos:definition  "We propose a cross-sectional analysis of 630 children ages 4-8 years who previously (2009-2013) participated in the NICHD National Fetal Growth Studies, a longitudinal study of fetal growth, and recently completed a child study visit (2017-2019). Aim 1 is to evaluate associations between levels of urinary phthalates and childhood obesity/adiposity measures. Aim 2 is to characterize how levels of phthalates vary by race-ethnic group and whether race-ethnic group modifies associations between phthalates and child obesity/adiposity outcomes. Both aims will be conducted as cross-sectional analyses. Of the 630 children, 303 are female, 199 are non-Hispanic black, 167 are non-Hispanic white, 175 are Hispanic and 89 are Asian/Pacific Islander. Moreover, children participated at one of nine study clinics across the United States; hence, our population represents a geographically diverse cohort. In summary, we propose to examine the association between phthalates and childhood obesity in a racially, ethnically and geographically diverse cohort." .
+
+hhearkb:STD-2018-2517
+        rdf:type         hasco:Study ;
+        skos:definition  "In the original study, the Syracuse Lead Study, which started in 2013, investigators tested the hypothesis that racial/ethnic (R/E) differences in blood lead Pb exposure might account for R/E differences in cardiovascular patterns of response to acute stress and R/E differences in left ventricular mass and arterial stiffness in a 50-50 African American-European American population of 300 nine- to eleven- year old children in Syracuse NY. Twenty children were followed up four years after the original study. In the approved CHEAR project, the investigators will expand the environmental exposure measures in the cohort to include measurements of urinary metals, including mercury, cadmium, and lead. In the HHEAR project we will add measurements of PBDEs and PAH. Using this data from both projects, we will assess differences in exposure biomarker levels by race and assess associations between various environmental exposures and cardiovascular outcomes." .
+
+hhearkb:STD-2016-1407
+        rdf:type          hasco:Study , twc:HHEAR_01363 ;
+        twc:HHEARP_00001  "2016-1407" ;
+        twc:HHEARP_00002  "Pediatric Inner-City Environmental Exposures at School and Home and Asthma Study" ;
+        twc:HHEARP_00003  wd:Q5149896 ;
+        twc:HHEARP_00004  twc:HHEAR_01368 ;
+        twc:HHEARP_00005  obo:NCIT_C89345 ;
+        twc:HHEARP_00006  wd:Q30 ;
+        twc:HHEARP_00007  wd:Q2002 ;
+        twc:HHEARP_00008  133 ;
+        twc:HHEARP_00009  obo:UBERON_0001088 ;
+        twc:HHEARP_00010  obo:DOID_2841 ;
+        twc:HHEARP_00011  twc:HHEAR_00308 , obo:CHEBI_26092 , obo:CHEBI_85122 , obo:CHEBI_15882 , obo:CHEBI_134179 ;
+        twc:HHEARP_00013  obo:NCIT_C64253 , obo:NCIT_C64263 ;
+        twc:HHEARP_00014  "evaluate the impact of environmental and personal care product use exposures on these biomarker levels and the impact that these exposures have on asthma morbidity, controlling comprehensively for other personal, home, and school environmental factors associated with asthma outcomes." ;
+        twc:HHEARP_00016  "Northeastern United States" ;
+        twc:HHEARP_00017  "Wanda Phipatanakul" ;
+        skos:definition   "Asthma affects 25 million Americans, particularly urban minority children. Children spend nearly all day in school, yet little is known about the role of a child's exposure to widely disseminated industrial chemicals on asthma morbidity. Early animal models and population studies have begun to identify an association between phenolic chemical exposure and asthma development through proposed increased regulation of an individual's allergic immune response. The study population consists of urban school children with physician diagnosis of asthma ages 4 through 13 from the Northeastern United States. In a cross sectional study, we hypothesize that exposure to environmental exposures (e.g. phenols, phthalates, and environmental tobacco smoke) in urban school children and higher urinary biomarkers will preliminarily be associated with higher asthma morbidity. This study, nested within a school-based environmental intervention trial, (School Inner-City Asthma Intervention Study, SICAS2 U01 AI 110397), will evaluate the impact of environmental and personal care product use exposures on these biomarker levels and the impact that these exposures have on asthma morbidity, controlling comprehensively for other personal, home, and school environmental factors associated with asthma outcomes." .
+
+hhearkb:STD-2017-1977
+        rdf:type          hasco:Study , twc:HHEAR_01359 ;
+        twc:HHEARP_00001  "2017-1977" ;
+        twc:HHEARP_00002  "Microbial and metabolic variations mediate the influence of childhood and adolescent EDC and trace element exposure on breast density" ;
+        twc:HHEARP_00003  wd:Q174710 ;
+        twc:HHEARP_00004  twc:HHEAR_01368 ;
+        twc:HHEARP_00005  obo:NCIT_C39298 , obo:NCIT_C89346 , obo:NCIT_C89345 ;
+        twc:HHEARP_00006  wd:Q298 ;
+        twc:HHEARP_00007  wd:Q2021 , wd:Q2024 , wd:Q2004 , wd:Q1995 , wd:Q1994 , wd:Q1996 ;
+        twc:HHEARP_00008  429 ;
+        twc:HHEARP_00016  "Chile" ;
+        twc:HHEARP_00017  "Michels, Karin" ;
+        twc:HHEARP_00020  "U01ES026130, R01CA158313" ;
+        skos:definition   "Our CHEAR project builds on the longitudinal Growth and Obesity Cohort Study in Santiago, Chile, which includes approximately 500 girls born in 2002-2003. Participants were recruited in 2006 from public nursery schools of six counties in Santiago representative of low to middle income families. Children were included if they were singletons with birthweight between 2500 and 4500g, and had no physical, medical or endocrine diseases that may alter the growth and/or onset of puberty. Semi-annual collection of participant anthropometric and pubertal development data by trained dietitians has continued since 2009. The overall objectives of our CHEAR study are to assess how exposure to endocrine-disrupting chemicals (phenols and phthalates), and trace elements (metals) measured in urine samples at Tanner stages 1 and 4 and 1 year post-menarche influence the pubertal microbiome and metabolome, and the potential impact on adolescent breast composition measured by DXA at Tanner stage 4 and 2 years post-menarche." .
+
+hhearkb:STD-2016-1534
+        rdf:type         hasco:Study ;
+        skos:definition  "This study utilizes the Nulliparous Mothers to Be (nuMOM2be) cohort study, a nationally representative group of approximately 10,000 nulliparous women with detailed assessments, and biomarkers of urinary phthalates, inflammation and placental function during each trimester of pregnancy and at delivery. The CHEAR study will be a nested case control study of 1020 cases of Adverse Pregnancy Outcomes (APO). We examined associations between two classes of prenatal environmental exposures (phthalates and maternal stress) and APOs (spontaneous preterm birth and maternal hypertensive disorders of pregnancy). The overarching goals are (1) to provide more definitive data regarding the associations between prenatal phthalates, psychosocial stress and the APOs; (2) to provide mechanistic data (i.e. markers of inflammation and placental function) between these exposures and outcomes; (3) to provide an additional avenue to explore associations between these exposures and fetal growth, and determine whether APOs may mediate those relationships." .
+
+hhearkb:STD-2017-1598
+        rdf:type          twc:HHEAR_01360 , hasco:Study ;
+        twc:HHEARP_00001  "2017-1598" ;
+        twc:HHEARP_00002  "Evaluation of Environmental Exposures in TEDDY" ;
+        twc:HHEARP_00003  wd:Q500606 ;
+        twc:HHEARP_00004  twc:HHEAR_01366 ;
+        twc:HHEARP_00005  obo:NCIT_C89345 , obo:NCIT_C89346 , obo:NCIT_C39298 ;
+        twc:HHEARP_00006  wd:Q33 , wd:Q1261 , wd:Q34 , wd:Q1428 , wd:Q1223 , wd:Q812 , wd:Q30 , wd:Q183 ;
+        twc:HHEARP_00007  wd:Q2021 , wd:Q1995 , wd:Q2019 , wd:Q25245 , wd:Q1986 , wd:Q1999 , wd:Q2014 , wd:Q2002 , wd:Q2004 , wd:Q1996 , wd:Q2024 , wd:Q1990 , wd:Q1998 , wd:Q1994 ;
+        twc:HHEARP_00008  1728 ;
+        twc:HHEARP_00016  "Multi-site" ;
+        twc:HHEARP_00017  "Krischer, Jeffrey" ;
+        twc:HHEARP_00020  "DK100238, DK095300, DK106955" ;
+        skos:definition   "The Environmental Determinants of Diabetes in the Young (TEDDY) is a multicenter prospective cohort study that started in 2004 and is following 8,676 children at increased genetic risk enrolled before 3 months of age and followed to 15 years of age in order to identify genetic and environmental triggers of type 1 diabetes (T1D) including infectious agents, dietary, and psychosocial factors. The TEDDY study is comprised of six clinical center in the United States, Germany, Finland, and Sweden. TEDDY designed two nested case-control studies, which include children who have developed islet autoantibodies or have been diagnosed with T1D, and their age-matched controls. TEDDY seeks to test the hypothesis that there are differences between cases and controls in trace elements, cytokine and chemokine levels, urinary phthalate metabolite concentrations, and urinary phenols." .
+
+hhearkb:STD-2017-1762
+        rdf:type         hasco:Study ;
+        skos:definition  "This CHEAR project will leverage an ongoing, two-group randomized controlled trial (R01HD083354) that compares the efficacy of a tobacco cessation intervention to an active control condition on smoking caregivers who bring their children to the pediatric emergency department. Participants are 0-17 years of age, nonsmokers, and have a potentially tobacco smoke related illness at baseline. All participants have varying levels of smoke exposure and live in the tristate area of southern Ohio, Indiana, or Kentucky. The sample is approximately 56% African American, 33% White, and 11% other races; sex is equally distributed. Recruitment began in April 2016. The CHEAR project will use sensitive LCMS techniques to analyze cotinine, a measure of tobacco smoke exposure, in child saliva samples collected from ill children at baseline and six-weeks after baseline. Investigators will explore the associations between different levels of tobacco smoke exposure and a broad range of biological outcomes associated with immune system dysregulation based on biomarkers of inflammatory responses and findings from targeted and untargeted metabolomics." .
+
+hhearkb:STD-2016-1449
+        rdf:type         hasco:Study ;
+        skos:definition  "The MARBLES Study is a cohort of high risk pregnancies for development of autism, typically a second child in a family that already has a child with autism. If there is already a child with autism in the family, the risk of another child with autism increases to approximately 20. Participating families reside in Northern California, specifically within a 2-hour drive of Sacramento. Mothers are enrolled either pre-conception or anytime during pregnancy. Children are followed until the child is three years old, at which time they receive a diagnosis of typically developing autism, or other developmental concerns. The study has been ongoing since 2006. In this Study, maternal urine samples from all three trimesters will be analyzed to determine concentrations of a suite of environmental phenols, including triclosan, triclocarbon, and BPA. Concentrations will be compared by diagnosis. First trimester samples will also be analyzed for metabolites of pesticides and phthalates." .
+
+hhearkb:STD-2016-1523
+        rdf:type          hasco:Study , twc:HHEAR_01359 ;
+        twc:HHEARP_00001  "2016-1523" ;
+        twc:HHEARP_00002  "Validation of Detailed Maternal Cigarette Smoke Exposure Self Reporting by Cotinine Analysis" ;
+        twc:HHEARP_00003  wd:Q5530214 ;
+        twc:HHEARP_00004  twc:HHEAR_01366 ;
+        twc:HHEARP_00006  wd:Q30 ;
+        twc:HHEARP_00007  wd:Q1990 , wd:Q1994 , wd:Q1996 , wd:Q1995 ;
+        twc:HHEARP_00008  1200 ;
+        twc:HHEARP_00016  "New Hampshire" ;
+        twc:HHEARP_00017  "Karagas, Margaret" ;
+        twc:HHEARP_00020  "P01 ES022832/RD83544201" ;
+        skos:definition   "The Children's Environment and Disease Prevention Research Center at Dartmouth utilizes a common longitudinal birth cohort study (New Hampshire Birth Cohort Study) begun in 2009 and comprised of more than 1,500 mother-child dyads who are residents of New Hampshire and obtain household water from private wells, a potential source of arsenic exposure in the region. Maternal participant age ranges from 18 to 45 years old and progeny age ranges from birth to 5 years. Objectives of the original study include 1) examining the effects of arsenic exposure during the vulnerable window of fetal development and early childhood upon childhood immunity, risk of infection, allergy/atopy, vaccine response and intestinal microbiome, 2) evaluate early childhood arsenic exposure via drinking water and diet and to quantify physical growth and neurodevelopmental effects of such exposures, and 3) develop novel biomarkers of exposure and health outcome by examining associations with epigenetic and gene expression profiles in infants and in placenta. The New Hampshire Birth Cohort Study obtains detailed information of maternal cigarette smoke exposure and second hand smoke exposure over the course of pregnancy and at child age of 5 years through self-reporting questionnaires. The study also collects maternal urine specimens between 22-30 weeks for subsequent analysis of biomarkers for various maternal exposures. The primary aim of the proposed request is to validate the NHBCS redundant self-reporting mechanisms of various cigarette smoke exposure by comparison to urinary biomarkers of i.e., cotinine and NNAL concentrations." .
+
+hhearkb:STD-2017-2121
+        rdf:type          hasco:Study , twc:HHEAR_01359 ;
+        twc:HHEARP_00001  "2017-2121" ;
+        twc:HHEARP_00002  "The Dynamics of Exposure, Phthalates and Asthma in a Randomized Trial (DEPART)" ;
+        twc:HHEARP_00003  wd:Q7896582 ;
+        twc:HHEARP_00004  twc:HHEAR_01367 ;
+        twc:HHEARP_00005  obo:NCIT_C89345 ;
+        twc:HHEARP_00006  wd:Q1223 , wd:Q30 ;
+        twc:HHEARP_00007  wd:Q25291 , wd:Q2002 , wd:Q25245 , wd:Q25290 ;
+        twc:HHEARP_00008  47 ;
+        twc:HHEARP_00009  obo:UBERON_0001088 ;
+        twc:HHEARP_00010  obo:DOID_2841 ;
+        twc:HHEARP_00011  obo:CHEBI_15882 , twc:HHEAR_00260 , obo:CHEBI_26092 ;
+        twc:HHEARP_00013  obo:NCIT_C64263 , obo:NCIT_C64253 ;
+        twc:HHEARP_00016  "Eastern Washington" ;
+        twc:HHEARP_00017  "Karr, Catherine" ;
+        twc:HHEARP_00020  "ES023510" ;
+        skos:definition   "The Dynamics of Exposure, Phthalates, and Asthma project (DEPART) utilizes data and samples collected within the Home Air in Agriculture Pediatric Intervention Trial (HAPI, NIEHS R01 ES023510). The participants are 70 Latino children with asthma aged 6-12 years who reside in rural, agricultural central WA State. They were recruited from 2015-2017 for a one-year follow up period of their asthma morbidity following randomization into a control group (education) or intervention (education plus 2 in home portable HEPA air cleaners). Follow assessments include 2 time points prior to randomization and 2 post randomization and includes collection of urine specimens. The objective of DEPART is to examine associations between urinary biomarkers for emerging contaminants of concern including phthalates, pesticides, and phenols and biomarkers of oxidative stress and inflammation in this population. DEPART also includes metabolomic profiling to investigate potential additional biological mechanisms of toxicity associated with these exposures." .
+
+hhearkb:STD-2016-1461
+        rdf:type         hasco:Study ;
+        skos:definition  "The CHARGE (CHildhood Autism Risks from Genes and Environment) Study is a case-control investigation, initiated in 2003, of children with autism spectrum disorder (ASD), non-autistic developmental delay (DD), and typical development among population controls (TD). The ReCHARGE Study will follow-up CHARGE children who were recruited from areas surrounding the UC Davis MIND Institute in Sacramento. All children were born in California, living with a biologic parent who spoke English or Spanish, and enrolled in CHARGE at ages 2-5 years, at which time they were examined for neurodevelopmental status once. Over 80 of the ASD cases and their matched TD controls, and about 2/3 of the DD children are males. Approximately 30 were Hispanic; 16 black, Asian, or mixed race; and 54 white non-Hispanic. The CHEAR objective is to evaluate metals, pesticides, phthalates, phenols and perfluorinated concentrations for associations with ASD or DD diagnosis and cognitive function. Chemical-gene interactions will also be explored." .
+
+hhearkb:STD-2016-34  rdf:type  hasco:Study , twc:HHEAR_01360 ;
+        twc:HHEARP_00001  "2016-34" ;
+        twc:HHEARP_00002  "Relating metals exposure to birth and early childhood outcomes via the metabotype of cord blood" ;
+        twc:HHEARP_00003  wd:Q49121 ;
+        twc:HHEARP_00005  obo:NCIT_C90339 ;
+        twc:HHEARP_00006  wd:Q30 ;
+        twc:HHEARP_00008  300 ;
+        twc:HHEARP_00009  obo:UBERON_0001969 , obo:UBERON_0012168 ;
+        twc:HHEARP_00011  twc:HHEAR_00363 , twc:HHEAR_00262 ;
+        twc:HHEARP_00013  obo:NCIT_C64253 , obo:NCIT_C64263 ;
+        twc:HHEARP_00016  "Bangladesh" ;
+        twc:HHEARP_00017  "David Christiani" ;
+        skos:definition   "The Proposed CHEAR study will study metals exposure in pregnant mothers to birth and early chidlhood  outcomes in a Bangladeshi birth cohort. We will assess differences in anthropomorphic birth outcomes based on cord blood metabolite profiles acquired using a targeted 1H NMR-based platform. We will utilize established as well as novel analytic approaches in the field of metabolomics." .
+
+hhearkb:STD-2016-1448
+        rdf:type         hasco:Study ;
+        skos:definition  "Over the past 20 years, we have examined relationships between air pollution exposure and health outcomes in children in our longitudinal Children Health Study (CHS) starting in year 1993. Results from the CHS cohort have shown that near-roadway air pollution (NRAP) exposure is associated with increased risk of childhood obesity. Based on these findings, we are currently examining a subset of CHS participants (N=200) that represent extremes of NRAP exposure occurring in Southern California in the Southern California Children Environmental Health Center (SC-CEHC) Project 1 (the parent project), which capitalizes on CHS resources and extensive pollutant measurements to investigate the impact of lifetime air pollution exposures on obesity, fat distribution, glucose homeostasis, lipid profile, systemic inflammation and the metabolic syndrome at age 17-18 years. These participants are being extensively phenotyped for obesity using dual-energy X-ray absorptiometry (DXA) and magnetic resonance imaging (MRI). Glucose homeostasis is being assessed using an oral glucose tolerance test (OGTT). The proposed CHEAR project will support an innovative collaboration between the CHS and the Emory CHEAR Laboratory Hub to perform non-targeted high resolution metabolomics (HRM) on 200 CHS fasting serum samples. The ultimate goal of this CHEAR project is to investigate the hypothesis that environmental chemicals, regional air pollutant (i.e. PM2.5) and traffic-related air pollution exposures (CALINE model-predicted NOx) can alter key metabolic pathway(s) and that these alterations are associated with obesity and type 2 diabetes-related traits during the important developmental period of adolescence." .
+
+hhearkb:STD-2018-2539
+        rdf:type         hasco:Study ;
+        skos:definition  "As part of the ECHO Pediatric Cohorts, we are working with the NIEHS/EPA-supported New Hampshire Birth Cohort Study (NHBCS): an ongoing prospective cohort study that has accrued over 1,500 maternal-infant dyads since 2009 with planned expansion to include 3,000 maternal-infant pairs across New Hampshire and Vermont. The goal of the study is to examine how early life exposures to environmental toxicants via the placenta, breast milk, early foods, home environment, and medical exposures relate to child health outcomes including growth and obesity, immune responses, and neurodevelopment. Participant ages ranged from 18 to 46 at the time of enrollment, and they comprise mostly white, rural women and children with wide sociodemographic variation. Currently children are followed-up to approximately 5 years of age. As a part of the NHBCS, this CHEAR study will characterize perfluoroalkyl substances (PFAS) in breast milk and examine how PFAS exposure may affect breast milk composition." .
+
+hhearkb:STD-2018-2273
+        rdf:type         hasco:Study ;
+        skos:definition  "Utilizing samples from the MMIP birth cohort, our overall objectives are to identify toxicants that influence birth outcomes (birth weight, gestational age, birth length), and to examine the epigenome, transcriptome, and metabolome as physiological processes altered by these exposures that may influence child health at birth and beyond. The Specific Aims are as follows: Aim 1: Examine associations between first trimester exposures and birth outcomes. Phenols, phthalates, organophosphorus flame retardants (OPFRs), and trace elements will be analyzed in maternal urine collected between 8 and 14 weeks of gestation. Aim 2: Identify metabolite profiles from untargeted analyses that are associated with first trimester exposures. Aim 3: Identify genes in umbilical cord blood leukocyte DNA that are differentially methylated, hydroxymethylated, and/or expressed by first trimester exposures. Aim 4: Evaluate metabolites and differentially regulated genes as mediators of relationships between first trimester exposures and birth outcomes." .
+
+hhearkb:STD-2016-1432
+        rdf:type          twc:HHEAR_01359 , hasco:Study ;
+        twc:HHEARP_00001  "2016-1432" ;
+        twc:HHEARP_00002  "Micronutrient deficiencies, environmental exposures and severe malaria: Risk factors for adverse neurodevelopmental outcomes in Ugandan children" ;
+        twc:HHEARP_00003  wd:Q1079140 ;
+        twc:HHEARP_00005  obo:NCIT_C89345 ;
+        twc:HHEARP_00006  wd:Q1036 ;
+        twc:HHEARP_00007  wd:Q2004 ;
+        twc:HHEARP_00008  102 ;
+        twc:HHEARP_00009  obo:UBERON_0000178 , obo:UBERON_0001969 , efo:EFO_0001941 ;
+        twc:HHEARP_00010  obo:DOID_12365 ;
+        twc:HHEARP_00011  twc:HHEAR_00363 ;
+        twc:HHEARP_00012  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C121459> , <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C115126> , <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C165711> ;
+        twc:HHEARP_00013  obo:NCIT_C64253 , obo:NCIT_C64263 ;
+        twc:HHEARP_00015  "Hospital Based Selection" ;
+        twc:HHEARP_00017  "Chandy C John" ;
+        skos:definition   "The primary hypotheses is that zinc deficiency or exposure to heavy metals can influence short and long term neurocognitive outcomes in healthy community children and in children with severe malaria, and that children with cerebral malaria have specific metabolomic changes that relate to longterm neurocognitive impairment.The original study is a longitudinal cohort study of Ugandan children on the relationship between cerebral malaria (CM) and severe malarial anemia (SMA) on mortality (in hospital and during follow up) ( 2 yrs) and longterm neurodevelopment and behavior ( >5yrs). The CHEAR study will examine the effects of micronutrient deficiency, metal exposure, and inflammation or mortality and longterm neurodevelopment  ( >5 yrs) and behavior in children with severe malaria (CM or SMA) and in community children (CC). There are measured levels of zinc, and heavy metals (lead, mercury, copper, manganese etc.) in children with severe malaria and community controls. " .
+
+hhearkb:STD-2016-1438
+        rdf:type          hasco:Study , twc:HHEAR_01359 ;
+        twc:HHEARP_00001  "2016-1438" ;
+        twc:HHEARP_00002  "Internal metabolic biomarker exposome and developmental disorders" ;
+        twc:HHEARP_00003  wd:Q129421 ;
+        twc:HHEARP_00004  twc:HHEAR_01367 ;
+        twc:HHEARP_00005  obo:NCIT_C89346 , obo:NCIT_C90339 ;
+        twc:HHEARP_00006  wd:Q99 , wd:Q30 ;
+        twc:HHEARP_00007  wd:Q2002 , wd:Q1990 , wd:Q1999 , wd:Q2004 , wd:Q25290 , wd:Q25337 , wd:Q25245 , wd:Q1995 , wd:Q2021 , wd:Q2024 , wd:Q1994 , wd:Q1996 , wd:Q25274 , wd:Q25291 , wd:Q1998 ;
+        twc:HHEARP_00008  211 ;
+        twc:HHEARP_00009  obo:UBERON_0001969 ;
+        twc:HHEARP_00010  obo:DOID_0060041 ;
+        twc:HHEARP_00012  cogat:CAO_01168 ;
+        twc:HHEARP_00013  obo:NCIT_C64253 , obo:NCIT_C64263 ;
+        twc:HHEARP_00017  "Schmidt, Rebecca J" ;
+        twc:HHEARP_00020  "ES020392" ;
+        skos:definition   "The MARBLES (Markers of Autism Risk in Babies: Learning Early Signs) prospective study of over 450 high-risk pregnancies recruits mothers who have a child with confirmed ASD and are either planning a pregnancy or are pregnant with another child, in order to understand what influences the outcome of the younger sibling and to identify early markers of ASD. These younger siblings are at 13-fold higher risk for developing ASD (1:5), than children in the general population (1:68).MARBLES recruits Northern California families from lists of children receiving services through the California Department of Developmental Services, typically within two hours driving distance to the University of California Davis MIND Institute in Sacramento where clinical assessments are administered. The resulting study populations are racially, ethnically, and socioeconomically diverse. Children are followed until the child is three years old, at which time they receive a diagnosis of typically developing, autism, or other developmental concerns. Medical, nutritional, lifestyle, and contaminant exposure data, developmental assessments, and biologic specimens are collected periodically throughout pregnancy and the first years of the child. For this CHEAR study, metabolomic markers in child umbilical cord and maternal pregnancy EDTA plasma will be measured and compared across diagnostic outcomes to allow a comprehensive screen of compounds and/or pathways potentially associated with ASD." .

@@ -1,0 +1,134 @@
+# baseURI: urn:x-evn-master:hhear_properties
+# imports: http://datashapes.org/graphql
+# imports: http://dublincore.org/specifications/dublin-core/dcmi-terms/2020-01-20/
+# imports: http://hadatac.org/ont/hasco/
+# imports: http://purl.org/twc/HHEAR
+
+@base          <urn:x-evn-master:hhear_properties> .
+@prefix twc: <http://purl.org/twc/> .
+@prefix metadata: <http://topbraid.org/metadata#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix teamwork: <http://topbraid.org/teamwork#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix edg: <http://edg.topbraid.solutions/model/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:x-evn-master:hhear_properties>
+        owl:imports      <http://datashapes.org/graphql> ;
+        rdfs:label       "HHEAR Properties" ;
+        rdf:type         owl:Ontology ;
+        <http://topbraid.org/swa#defaultNamespace>  "http://purl.org/twc/" ;
+        metadata:status  metadata:UnderDevelopmentStatus ;
+        rdfs:comment     "An ontology of properties that are used within the HHEAR Knowledge Graph to capture metadata about studies" ;
+        edg:subjectArea  <urn:x-tb-governance:HHEAR_Ontology> .
+
+twc:HHEARP_00001  rdfs:label  "identifier" ;
+        rdf:type            owl:DatatypeProperty ;
+        rdfs:comment        "This property relates a study with a unique identifier for the study, which can be used to generate a URI for the study." ;
+        rdfs:subPropertyOf  dct:identifier ;
+        rdfs:domain         <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00002  rdfs:label  "title" ;
+        rdf:type            owl:DatatypeProperty ;
+        rdfs:comment        "This property relates a study to its title. " ;
+        rdfs:subPropertyOf  dct:title ;
+        rdfs:domain         <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00003  rdfs:label  "institution" ;
+        rdf:type            owl:ObjectProperty ;
+        rdfs:comment        "This property relates a study to the academic institution(s) affiliated with the study." ;
+        rdfs:subPropertyOf  <http://hadatac.org/ont/hasco/hasInstitution> ;
+        rdfs:subPropertyOf  dct:publisher ;
+        rdfs:domain         <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00004  rdfs:label  "recruitment setting" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study with one or more classes that indicate how the study recruited its subjects." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00005  rdfs:label  "participant life stages" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study to the classes that describe the life stage(s) of the study subjects." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00006  rdfs:label  "geographic location" ;
+        rdf:type            owl:ObjectProperty ;
+        rdfs:comment        "This property relates a study to the geographic location(s) where the study was performed or where the subjects were recruited from." ;
+        rdfs:subPropertyOf  dct:spatial ;
+        rdfs:domain         <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00007  rdfs:label  "data collection years" ;
+        rdf:type            owl:ObjectProperty ;
+        rdfs:comment        "This property relates a study to the year(s) during which the study was actively collecting data from subjects." ;
+        rdfs:subPropertyOf  dct:temporal ;
+        rdfs:domain         <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00008  rdfs:label  "population size" ;
+        rdf:type      owl:DatatypeProperty ;
+        rdfs:comment  "This property relates a study with the number of its participating subjects." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00009  rdfs:label  "biospecimens analyzed" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study to the types of biospecimens analyzed as part of the study." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00010  rdfs:label  "primary health outcomes" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study to the types of primary health outcomes examined in the study." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00011  rdfs:label  "environmental exposures assessed" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study with the types of environmental exposures assessed in the study." .
+
+twc:HHEARP_00012  rdfs:label  "standardized questionnaires used" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study to one or more of the standardized questionnaires used to evaluate or collect information from study subjects." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00013  rdfs:label  "source types" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study to the types of sources used to collect data from study subjects." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00014  rdfs:label  "specific aims statement" ;
+        rdf:type      owl:DatatypeProperty ;
+        rdfs:comment  "This property relates a study to a textual description of its specific aims." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00015  rdfs:label  "recruitment setting description" ;
+        rdf:type      owl:DatatypeProperty ;
+        rdfs:comment  "This property relates a study with a textual description of the setting(s) where subjects were recruited to participate in the study." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00016  rdfs:label  "geographic location description" ;
+        rdf:type      owl:DatatypeProperty ;
+        rdfs:comment  "This property relates a study to a textual description of the geographic location where the study was conducted." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00017  rdfs:label  "principal investigator name" ;
+        rdf:type      owl:DatatypeProperty ;
+        rdfs:comment  "This property relates a study to the name of the principal investigator of the study." ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00018  rdfs:label  "parent study" ;
+        rdf:type      owl:ObjectProperty ;
+        rdfs:comment  "This property relates a study to another study that this study is derived from, or based on." ;
+        rdfs:range    <http://hadatac.org/ont/hasco/Study> ;
+        rdfs:domain   <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00019  rdfs:label  "other institution name" ;
+        rdf:type     owl:DatatypeProperty ;
+        rdfs:domain  <http://hadatac.org/ont/hasco/Study> .
+
+twc:HHEARP_00020  rdfs:label  "parent study grant number" ;
+        rdf:type     owl:DatatypeProperty ;
+        rdfs:domain  <http://hadatac.org/ont/hasco/Study> .
+
+<urn:x-evn-master:hhear_properties>
+        owl:imports  twc:HHEAR ;
+        owl:imports  <http://dublincore.org/specifications/dublin-core/dcmi-terms/2020-01-20/> ;
+        owl:imports  <http://hadatac.org/ont/hasco/> .
