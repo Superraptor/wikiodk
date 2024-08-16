@@ -6,6 +6,14 @@
 #   check_local_settings.sh
 #
 
+# Update LocalSettings.php to allow for entity import.
+    # TODO: Add and remove this only when importing.
+if grep -Fxq "\$wgWBRepoSettings['allowEntityImport'] = true;" /var/www/html/LocalSettings.php; then
+    :
+else
+    echo "\$wgWBRepoSettings['allowEntityImport'] = true;" >> /var/www/html/LocalSettings.php
+fi
+
 # Loop through passed extensions; load if not in LocalSettings.php.
 for package in "$@"
 do

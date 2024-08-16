@@ -30,8 +30,6 @@ def main():
     parser.add_argument('-stop', default=False, action='store_true')
     parser.add_argument('-down', default=False, action='store_true')
     parser.add_argument('-reset', default=False, action='store_true')
-    parser.add_argument('-upload', default=False, action='store_true')
-    parser.add_argument('-download', default=False, action='store_true')
     parser.add_argument('-install_composer', default=False, action='store_true')
     parser.add_argument('-load_extensions', default=False, action='store_true')
     parser.add_argument('-import_files', default=False, action='store_true')
@@ -127,6 +125,7 @@ def main():
         delete_configuration(deploy_dir)
         set_up_configuration_template(deploy_dir, yaml_dict)
         run_docker_compose_up(deploy_dir)
+        exit()
         install_packages(yaml_dict)
         load_extensions(yaml_dict)
         install_composer()
@@ -208,74 +207,9 @@ def reset_configuration(deploy_dir, yaml_dict=None):
         make_modifications(deploy_dir, yaml_dict)
     run_docker_compose_up(deploy_dir)
 
-# Installs wikiteam3.
-def install_wikiteam3():
-    subprocess.run("pip install wikiteam3 --upgrade", shell=True)
-
 # Installs a Wikibase extension.
 def install_wikibase_extension():
     print()
-
-# Create XML dump.
-def create_xml_dump(domain, dump_folder, with_images=False):
-    if with_images:
-        chdir(dump_folder)
-        subprocess.run("wikiteam3dumpgenerator "+domain+" --xml --images", shell=True)
-        chdir(wd)
-    else:
-        chdir(dump_folder)
-        subprocess.run("wikiteam3dumpgenerator "+domain+" --xml", shell=True)
-        chdir(wd)
-
-# Resume XML dump.
-def resume_xml_dump(domain, dump_folder):
-    chdir(dump_folder)
-    subprocess.run("wikiteam3dumpgenerator "+domain+" --xml --resume", shell=True)
-    chdir(wd)
-
-# Uploads an XML dump into the Wikibase.
-def upload(yaml_dict):
-    if "dumps" in yaml_dict["wikibase"]:
-        for dump in yaml_dict["wikibase"]["dumps"]:
-            output_file ="var/tmp/"+str(os.path.basename(dump))
-            subprocess.run('docker cp %s wbs-deploy-wikibase-1:/var/tmp/%s' % (dump, output_file), shell=True)
-            subprocess.run('docker exec wbs-deploy-wikibase-1 //bin//bash -c "php /var/www/html/maintenance/importDump.php < %s"' % (output_file), shell=True)
-
-    elif "external_host" in yaml_dict["wikibase"]:
-        # Make dumps dir if it doesn't exist.
-        dump_dir = './target/%s/ontology/tmp/dumps/' % yaml_dict["repo"] + '/'
-        os.makedirs(dump_dir, exist_ok=True)
-
-        # Make dumpRdf.php if it doesn't exist.
-        dump_rdf_dir = dump_dir+'wikiteam3/'
-        os.makedirs(dump_rdf_dir, exist_ok=True)
-
-        # If not indicated in YAML, download using the WikiTeam 3 dumpgenerator.
-        create_xml_dump(yaml_dict["wikibase"]["external_host"], dump_rdf_dir)
-
-        # Upload created dump.
-            # TODO: Not sure how to pick up a new XML dump created with WikiTeam3?
-    
-    # Upload all XML dumps?
-    else:
-        print("Not yet implemented.")
-
-# Downloads RDF dump from existing Wikibase.
-def download(yaml_dict):
-    time_now=str(int(time.time()))
-    wikibase_dump_file=yaml_dict["repo"]+"_"+time_now+".ttl"
-    wikibase_dump_path="/var/tmp/"+wikibase_dump_file
-    subprocess.run('docker exec wbs-deploy-wikibase-1 //bin//bash -c "php /var/www/html/extensions/Wikibase/repo/maintenance/dumpRdf.php > %s"' % wikibase_dump_path, shell=True)
-    
-    # Make dumps dir if it doesn't exist.
-    dump_dir = './target/%s/ontology/tmp/dumps/' % yaml_dict["repo"] + '/'
-    os.makedirs(dump_dir, exist_ok=True)
-
-    # Make dumpRdf.php if it doesn't exist.
-    dump_rdf_dir = dump_dir+'dumpRdf.php/'
-    os.makedirs(dump_rdf_dir, exist_ok=True)
-
-    subprocess.run('docker cp wbs-deploy-wikibase-1:%s ./target/%s/ontology/tmp/%s' % (wikibase_dump_path, yaml_dict["repo"], wikibase_dump_file), shell=True)
 
 # Replaces a line in a file with another line."
 def replace_in_file(file_path, search_text, new_text):
@@ -396,6 +330,5 @@ def run_rebuild():
     # Remove rebuild script.
     subprocess.run('docker exec wbs-deploy-wikibase-1 //bin//bash -c "rm /var/tmp/wikibase_rebuild.sh"', shell=True)
     
-
 if __name__ == '__main__':
     main()
