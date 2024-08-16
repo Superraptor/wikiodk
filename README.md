@@ -24,7 +24,7 @@ Next steps are to get additional extensions fully functional; however, it should
 3. Run `.\seed-via-docker.bat -C project.yaml` in this directory.
 4. Open a web browser. Go to `localhost:8880`. Note that the browser will say the instance is unsafe but you can proceed without issue (see [here](https://github.com/wmde/wikibase-release-pipeline/tree/main/deploy#can-i-host-wikibase-suite-locally) for more details as to why this happens).
 
-### Wikibase XML Download and Upload
+#### Wikibase XML Download and Upload
 
 Note that this section is experimental and may change significantly in the near future.
 
