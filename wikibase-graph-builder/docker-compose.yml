@@ -1,0 +1,13 @@
+name: wgb-deploy
+services:
+  wikibase-graph-builder:
+    image: hkdigital/debian-slim
+    build:
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m
