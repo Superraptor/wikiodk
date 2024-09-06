@@ -3,21 +3,18 @@ title: OntoWiki Proof-of-Concept Ontology
 github_org: Superraptor
 repo: ontowikipoc
 wikibase:
-  wikibase_public_host: localhost
+  wikibase_public_host: wikibase.example.com
   packages:
     - zip
   extensions:
     - CirrusSearch
     - Elastica
-    - JsonConfig
-    - Kartographer
-    - WikibaseQualityConstraints
   import:
-    - hhear_properties.ttl
-    - study-design-data.ttl
+    - cedar_inference_graph_2024_2.ttl
   adapter:
     default_lang: 'en'
   string_limits:
     string: 2000
     monolingual_text: 2000
     multilang: 2000
+  wikibase-graph-builder: false
