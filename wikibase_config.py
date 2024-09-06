@@ -7,11 +7,21 @@
 #
 
 import ast
+import json
 import os
 import subprocess
+import yaml
+
+from pathlib import Path
 
 def main():
-    local_settings_dict = get_local_settings()
+    #local_settings_dict = get_local_settings()
+
+    # Read in YAML file.
+    yaml_dict=yaml.safe_load(Path("project.yaml").read_text())
+    print(yaml_dict)
+
+    get_sparql_endpoint(yaml_dict)
 
 def get_local_settings():
     local_settings_path=os.path.join(os.environ['TEMP'], "LocalSettings.php")
@@ -67,6 +77,52 @@ def get_mw_admin_password(yaml_dict):
             for line in env_file:
                 if line.startswith("MW_ADMIN_PASS="):
                     return (line.split("=")[1]).strip()
+
+def get_api_endpoint(yaml_dict):
+    mediawiki_api_url=None
+    if 'wikibase_public_host' in yaml_dict['wikibase']:
+        docker_yaml_dict=yaml.safe_load(Path("./target/"+yaml_dict['repo']+"/src/scripts/wikibase-release-pipeline/deploy/docker-compose.yml").read_text())
+        port_no=None
+        if "ports" in docker_yaml_dict["services"]["wikibase"]:
+            port_no=docker_yaml_dict["services"]["wikibase"]["ports"][0]
+            if ':' in port_no:
+                port_no=port_no.split(':')[0]
+        try:
+            mediawiki_api_url=yaml_dict['wikibase']['wikibase_public_host'] + ':' + port_no + "/w/api.php"
+            if mediawiki_api_url.startswith('localhost'):
+                mediawiki_api_url="http://"+mediawiki_api_url
+            else:
+                mediawiki_api_url="http://"+yaml_dict['wikibase']['wikibase_public_host']+"/w/api.php"  
+        except TypeError:
+            mediawiki_api_url="http://"+yaml_dict['wikibase']['wikibase_public_host']+"/w/api.php"
+        except AttributeError:
+            mediawiki_api_url="http://"+yaml_dict['wikibase']['wikibase_public_host']+"/w/api.php"
+    elif 'external_host' in yaml_dict['wikibase']:
+        mediawiki_api_url=str(yaml_dict['wikibase']['external_host'])+"/w/api.php"
+    else:
+        mediawiki_api_url='http://localhost:8880/w/api.php'
+    return mediawiki_api_url
+
+def get_sparql_endpoint(yaml_dict):
+    sparql_endpoint_url=None
+    if 'wikibase_public_host' in yaml_dict['wikibase']:
+        with open('./target/'+yaml_dict['repo']+'/src/scripts/wikibase-release-pipeline/build/WDQS-frontend/custom-config.json', 'r') as f:
+            json_data=json.load(f)
+            sparql_endpoint=json_data['api']['sparql']['uri']
+        docker_yaml_dict=yaml.safe_load(Path("./target/"+yaml_dict['repo']+"/src/scripts/wikibase-release-pipeline/deploy/docker-compose.yml").read_text())
+        port_no=None
+        if "ports" in docker_yaml_dict["services"]["wdqs-frontend"]:
+            port_no=docker_yaml_dict["services"]["wdqs-frontend"]["ports"][0]
+            if ':' in port_no:
+                port_no=port_no.split(':')[0]
+        sparql_endpoint_url=yaml_dict['wikibase']['wikibase_public_host'] + ':' + port_no + sparql_endpoint
+        if sparql_endpoint_url.startswith('localhost'):
+            sparql_endpoint_url="http://"+sparql_endpoint_url
+    elif 'external_host' in yaml_dict['wikibase']:
+        sparql_endpoint_url=yaml_dict['wikibase']['external_host'] + '/query/sparql'
+    else:
+        sparql_endpoint_url='http://localhost:8834/proxy/wdqs/bigdata/namespace/wdq/sparql'
+    return sparql_endpoint_url
 
 # TODO: Only works when initializing, will not overwrite.
 def set_string_limits(yaml_dict):

@@ -7,6 +7,7 @@
 #
 
 import argparse
+import convert_crlf_to_lf
 import fileinput
 import os
 import shutil
@@ -20,6 +21,19 @@ from os import getcwd, path, chdir
 from pathlib import Path
 
 wd = os.getcwd()
+
+container_list = [
+    "wbs-deploy-elasticsearch-1",
+    "wbs-deploy-mysql-1",
+    "wbs-deploy-traefik-1",
+    "wbs-deploy-wikibase-1",
+    "wbs-deploy-quickstatements-1",
+    "wbs-deploy-wdqs-1",
+    "wbs-deploy-wikibase-jobrunner-1",
+    "wbs-deploy-wdqs-updater-1",
+    "wbs-deploy-wdqs-proxy-1",
+    "wbs-deploy-wdqs-frontend-1"
+]
 
 def main():
 
@@ -208,6 +222,9 @@ def download_wikibase_release_pipeline(repo):
         subprocess.run("git checkout deploy-3", shell=True)
         chdir(wd)
 
+        # Convert strings to Unix.
+        convert_crlf_to_lf.convert(str(wd))
+
         return deploy_dir
     
     else:
@@ -230,11 +247,20 @@ def set_up_configuration_template(deploy_dir, yaml_dict=None):
         make_modifications(yaml_dict, deploy_dir)
 
 # Runs Docker compose up.
-def run_docker_compose_up(deploy_dir):
+def run_docker_compose_up(deploy_dir, wait=False):
     if path.exists(deploy_dir):
         chdir(deploy_dir)
-        subprocess.run("docker compose up --wait", shell=True)
+        if wait:
+            subprocess.run("docker compose up --wait", shell=True)
+        else:
+            subprocess.run("docker compose up", shell=True)
         chdir(wd)
+        if False in list(check_all_containers(container_list).values()):
+            print("At least one of the required containers is unhealthy or not running. Exiting...")
+            exit()
+    else:
+        print("Deploy directory path does not exist. Exiting...")
+        exit()
 
 # Runs Docker compose stop.
 def run_docker_compose_stop(deploy_dir):
@@ -242,6 +268,8 @@ def run_docker_compose_stop(deploy_dir):
         chdir(deploy_dir)
         subprocess.run("docker compose stop", shell=True)
         chdir(wd)
+    else:
+        print("Deploy directory path does not exist. Skipping...")
 
 # Runs Docker compose down.
 def run_docker_compose_down(deploy_dir):
@@ -249,6 +277,23 @@ def run_docker_compose_down(deploy_dir):
         chdir(deploy_dir)
         subprocess.run("docker compose down --volumes", shell=True)
         chdir(wd)
+    else:
+        print("Deploy directory path does not exist. Skipping...")
+
+# Check all containers.
+def check_all_containers(container_list):
+    container_dict = {}
+    for container_name in container_list:
+        container_dict[container_name] = check_container(container_name)
+    return container_dict
+
+# Check container is up.
+def check_container(container_name):
+    s = str(subprocess.check_output('docker ps', shell=True))
+    if s.find(container_name) != -1:
+        return True
+    else:
+        return False
 
 # Deletes the Docker configuration.
 def delete_configuration(deploy_dir):

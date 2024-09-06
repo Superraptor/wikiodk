@@ -6,6 +6,7 @@
 #   wikibase_import.py
 #
 
+import argparse
 import os.path
 import rdflib
 import subprocess
@@ -18,31 +19,29 @@ from os import getcwd, path
 from pathlib import Path
 from rdflib.namespace import OWL, RDF, RDFS
 
+from wbsync.external.uri_factory import URIFactoryMock
 from wbsync.triplestore import WikibaseAdapter
 from wbsync.synchronization import GraphDiffSyncAlgorithm, OntologySynchronizer
+from wikibase_config import get_api_endpoint, get_sparql_endpoint
 from wikidataintegrator.wdi_config import config as wikidata_integrator_config
 
 def main():
-    
+
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--source', type=str, required=False, help='The source file name.')
+    parser.add_argument('--target', type=str, required=False, help='The target file name.')
+    args=parser.parse_args()
+
     # Read in YAML file.
     yaml_dict=yaml.safe_load(Path("project.yaml").read_text())
     print(yaml_dict)
 
     init_factory(yaml_dict)
-    import_from_file(yaml_dict)
-    # Parse files
-    #if "import" in yaml_dict["wikibase"]:
-    #    for file_path in yaml_dict["wikibase"]["import"]:
-    #        g = parse_file(file_path)
 
-    #install_hercules_sync(yaml_dict)
-    #install_wikibase_sync(yaml_dict)
-
-    # Set up module paths for imports.
-    #module_path = os.path.abspath("./target/"+yaml_dict['repo']+"/src/scripts")
-    #hercules_sync_path = os.path.abspath("./target/"+yaml_dict['repo']+"/src/scripts/hercules-sync")
-    #sys.path.append(module_path)
-    #sys.path.append(hercules_sync_path)
+    if args.source and args.target:
+        update_from_file(yaml_dict, args.target, args.source)
+    else:
+        import_from_file(yaml_dict)
 
 def parse_file(file_path):
     if os.path.isfile(file_path):
@@ -100,10 +99,22 @@ def return_instances(g):
 def import_from_file(yaml_dict, local_settings_dict=None):
     set_default_lang(yaml_dict)
     adapter = set_up_wikibase_adapter(yaml_dict)
-    synchronizer = init_synchronizer()
     if local_settings_dict:
-        set_wikidata_integrator_config(local_settings_dict)
+        set_wikidata_integrator_config(adapter._local_item_engine, local_settings_dict)
+    synchronizer = init_synchronizer()
     add_from_file(yaml_dict, synchronizer, adapter)
+
+def update_from_file(yaml_dict, target_file, source_file, local_settings_dict=None):
+    with open(source_file, 'r') as f:
+        source_content = f.read()
+    with open(target_file, 'r') as f:
+        target_content = f.read()
+    set_default_lang(yaml_dict)
+    adapter = set_up_wikibase_adapter(yaml_dict)
+    if local_settings_dict:
+        set_wikidata_integrator_config(adapter._local_item_engine, local_settings_dict)
+    synchronizer = init_synchronizer()
+    add_content(synchronizer, adapter, target_content, source_content)
 
 def execute_synchronization(source_content, target_content, synchronizer, adapter):
     ops = synchronizer.synchronize(source_content, target_content)
@@ -139,8 +150,9 @@ def add_content(synchronizer, adapter, target_content, source_content=None):
     execute_synchronization(source_content, target_content, synchronizer, adapter)
 
 def set_up_wikibase_adapter(yaml_dict):
-    mediawiki_api_url='http://localhost:8880/w/api.php' # TODO: Pull value from somewhere?
-    sparql_endpoint_url='http://localhost:8834/proxy/wdqs/bigdata/namespace/wdq/sparql' # TODO: Pull value from somewhere?
+    mediawiki_api_url=get_api_endpoint(yaml_dict)
+    sparql_endpoint_url=get_sparql_endpoint(yaml_dict)
+    # 'http://localhost:8834/proxy/wdqs/bigdata/namespace/wdq/sparql' # TODO: Pull value from somewhere?
     USERNAME=wikibase_config.get_mw_admin_name(yaml_dict)
     PASSWORD=wikibase_config.get_mw_admin_password(yaml_dict)
     adapter = WikibaseAdapter(mediawiki_api_url, sparql_endpoint_url, USERNAME, PASSWORD)
@@ -150,30 +162,6 @@ def init_synchronizer():
     algorithm = GraphDiffSyncAlgorithm()
     synchronizer = OntologySynchronizer(algorithm)
     return synchronizer
-
-def install_hercules_sync(yaml_dict):
-    pass
-    # Check if hercules-sync has been downloaded; if not begin downloading.
-    #hercules_sync_dir="./target/"+yaml_dict['repo']+"/src/scripts/hercules-sync"
-    #if not path.exists(hercules_sync_dir):
-    #    subprocess.run("git clone https://github.com/weso/hercules-sync "+hercules_sync_dir, shell=True) 
-
-    # Install hercules-sync.
-    #chdir(hercules_sync_dir)
-    #subprocess.run("pip install -r requirements.txt", shell=True)
-    #chdir(wd)
-
-def install_wikibase_sync(yaml_dict):
-    pass
-    # Check if wikibase-sync has been downloaded; if not begin downloading.
-    #wikibase_sync_dir="./target/"+yaml_dict['repo']+"/src/scripts/wikibase-sync"
-    #if not path.exists(wikibase_sync_dir):
-    #    subprocess.run("git clone https://github.com/weso/wikibase-sync "+wikibase_sync_dir, shell=True) 
-        
-    # Install wikibase-sync. # May not be necessary?
-    #chdir(wikibase_sync_dir)
-    #subprocess.run("python setup.py install", shell=True)
-    #chdir(wd)
 
 def set_default_lang(yaml_dict, local_settings_dict=None, use_lang=None):
     if "adapter" in yaml_dict["wikibase"]:
@@ -189,20 +177,14 @@ def set_default_lang(yaml_dict, local_settings_dict=None, use_lang=None):
             wbsync.triplestore.wikibase_adapter.DEFAULT_LANG = local_settings_dict["wgLanguageCode"]
 
 # TODO: This doesn't seem to function?
-def set_wikidata_integrator_config(local_settings_dict):
+def set_wikidata_integrator_config(item_engine, local_settings_dict):
     # See: https://github.com/SuLab/WikidataIntegrator/blob/505d58d7c1d530c79f00bb1ad6b4500fd303efc4/wikidataintegrator/wdi_config.py#L27
-    wikidata_integrator_config["PROPERTY_CONSTRAINT_PID"] = local_settings_dict["wgWBQualityConstraintsPropertyConstraintId"]
-    wikidata_integrator_config["DISTINCT_VALUES_CONSTRAINT_QID"] = local_settings_dict["wgWBQualityConstraintsDistinctValuesConstraintId"]
-    #print(wikidata_integrator_config)
+    if "wgWBQualityConstraintsPropertyConstraintId" in local_settings_dict:
+        item_engine.property_constraint_pid = local_settings_dict["wgWBQualityConstraintsPropertyConstraintId"]
+    if "wgWBQualityConstraintsDistinctValuesConstraintId" in local_settings_dict:
+        item_engine.distinct_values_constraint_qid = local_settings_dict["wgWBQualityConstraintsDistinctValuesConstraintId"]
 
 def init_factory(yaml_dict):
-    #module_path = os.path.abspath("./target/"+yaml_dict['repo']+"/src/scripts")
-    #hercules_sync_path = os.path.abspath("./target/"+yaml_dict['repo']+"/src/scripts/hercules-sync")
-    #sys.path.append(module_path)
-    #sys.path.append(hercules_sync_path)
-
-    from wbsync.external.uri_factory import URIFactoryMock
-
     factory = URIFactoryMock()
     factory.reset_factory()
 
