@@ -222,8 +222,16 @@ def download_wikibase_release_pipeline(repo):
         subprocess.run("git checkout deploy-3", shell=True)
         chdir(wd)
 
+        # Copy .gitattributes file.
+        shutil.copy("./.gitattributes", wikibase_release_pipeline_dir+"/build/Wikibase/")
+
         # Convert strings to Unix.
         convert_crlf_to_lf.convert(str(wd))
+
+        # Build Docker containers.
+        chdir(wikibase_release_pipeline_dir)
+        subprocess.run("./build.sh wikibase", shell=True)
+        chdir(wd)
 
         return deploy_dir
     
