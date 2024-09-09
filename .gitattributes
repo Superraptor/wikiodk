@@ -1,3 +1,9 @@
 * text=auto
-*.sh text eol=lf
 *.conf text eol=lf
+Dockerfile  eol=lf
+*.bat  eol=crlf
+*.sh   eol=lf
+*.env  eol=lf
+*.json eol=lf
+*.ini  eol=lf
+*.php  eol=lf
