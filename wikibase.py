@@ -191,7 +191,7 @@ def main():
         #load_extensions(yaml_dict, install_at_build_time=True)
         delete_configuration(deploy_dir)
         set_up_configuration_template(deploy_dir, yaml_dict)
-        run_docker_compose_up(deploy_dir)
+        run_docker_compose_up(deploy_dir, wait=True)
         #install_packages(yaml_dict)
         set_up_wikibase_quality_constraints(yaml_dict)
         wikibase_config.set_string_limits(yaml_dict)

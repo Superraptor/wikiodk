@@ -118,6 +118,8 @@ def get_sparql_endpoint(yaml_dict):
         sparql_endpoint_url=yaml_dict['wikibase']['wikibase_public_host'] + ':' + port_no + sparql_endpoint
         if sparql_endpoint_url.startswith('localhost'):
             sparql_endpoint_url="http://"+sparql_endpoint_url
+        else:
+            sparql_endpoint_url="http://"+sparql_endpoint_url
     elif 'external_host' in yaml_dict['wikibase']:
         sparql_endpoint_url=yaml_dict['wikibase']['external_host'] + '/query/sparql'
     else:

@@ -7,10 +7,12 @@
 #
 
 import argparse
+import contextlib
 import os.path
 import rdflib
-import subprocess
+import requests
 import sys
+import warnings
 import wbsync.triplestore.wikibase_adapter
 import wikibase_config
 import yaml
@@ -18,12 +20,15 @@ import yaml
 from os import getcwd, path
 from pathlib import Path
 from rdflib.namespace import OWL, RDF, RDFS
+from urllib3.exceptions import InsecureRequestWarning
 
 from wbsync.external.uri_factory import URIFactoryMock
 from wbsync.triplestore import WikibaseAdapter
 from wbsync.synchronization import GraphDiffSyncAlgorithm, OntologySynchronizer
 from wikibase_config import get_api_endpoint, get_sparql_endpoint
 from wikidataintegrator.wdi_config import config as wikidata_integrator_config
+
+old_merge_environment_settings = requests.Session.merge_environment_settings
 
 def main():
 
@@ -114,7 +119,7 @@ def update_from_file(yaml_dict, target_file, source_file, local_settings_dict=No
     if local_settings_dict:
         set_wikidata_integrator_config(adapter._local_item_engine, local_settings_dict)
     synchronizer = init_synchronizer()
-    add_content(synchronizer, adapter, target_content, source_content)
+    add_content(synchronizer, adapter, target_content, source_content, yaml_dict=yaml_dict)
 
 def execute_synchronization(source_content, target_content, synchronizer, adapter):
     ops = synchronizer.synchronize(source_content, target_content)
@@ -125,6 +130,8 @@ def execute_synchronization(source_content, target_content, synchronizer, adapte
             if not res.successful:
                 print(f"Error synchronizing triple: {res.message}")
         except ValueError:
+            pass # TODO: Come back and fix this!!!
+        except NotImplementedError:
             pass # TODO: Come back and fix this!!!
 
 # TODO: Fix so can take a single file and to deal with target_content/source_content
@@ -140,14 +147,22 @@ def add_from_file(yaml_dict, synchronizer, adapter):
                 target_content = f.read()
             if target_content:
                 print(target_content)
-                add_content(synchronizer, adapter, target_content, source_content=None)
+                add_content(synchronizer, adapter, target_content, source_content=None, yaml_dict=yaml_dict)
 
-def add_content(synchronizer, adapter, target_content, source_content=None):
+def add_content(synchronizer, adapter, target_content, source_content=None, yaml_dict=None):
     if source_content == None:
         source_content = ""
     ops = synchronizer.synchronize(source_content, target_content)
     print(ops)
-    execute_synchronization(source_content, target_content, synchronizer, adapter)
+    executed=False
+    if yaml_dict:
+        if "wikibase_public_host" in yaml_dict["wikibase"]:
+            if yaml_dict["wikibase"]["wikibase_public_host"] == 'wikibase.example.com':
+                with no_ssl_verification():
+                    execute_synchronization(source_content, target_content, synchronizer, adapter)
+                    executed=True
+    if executed==False:
+        execute_synchronization(source_content, target_content, synchronizer, adapter)
 
 def set_up_wikibase_adapter(yaml_dict):
     mediawiki_api_url=get_api_endpoint(yaml_dict)
@@ -155,7 +170,14 @@ def set_up_wikibase_adapter(yaml_dict):
     # 'http://localhost:8834/proxy/wdqs/bigdata/namespace/wdq/sparql' # TODO: Pull value from somewhere?
     USERNAME=wikibase_config.get_mw_admin_name(yaml_dict)
     PASSWORD=wikibase_config.get_mw_admin_password(yaml_dict)
-    adapter = WikibaseAdapter(mediawiki_api_url, sparql_endpoint_url, USERNAME, PASSWORD)
+    # Note: WikibaseAdapter (and cascading packages) will not trust a self-signed certificate;
+    # this section will bypass that restriction, but it opens up your machine to man-in-the-
+    # middle attacks. Use with EXTREME caution.
+    if mediawiki_api_url == 'http://wikibase.example.com/w/api.php':
+        with no_ssl_verification():
+            adapter = WikibaseAdapter(mediawiki_api_url, sparql_endpoint_url, USERNAME, PASSWORD)
+    else:
+        adapter = WikibaseAdapter(mediawiki_api_url, sparql_endpoint_url, USERNAME, PASSWORD)
     return adapter
 
 def init_synchronizer():
@@ -187,6 +209,31 @@ def set_wikidata_integrator_config(item_engine, local_settings_dict):
 def init_factory(yaml_dict):
     factory = URIFactoryMock()
     factory.reset_factory()
+
+# Adapted from: https://stackoverflow.com/questions/15445981/how-do-i-disable-the-security-certificate-check-in-python-requests
+@contextlib.contextmanager
+def no_ssl_verification():
+    opened_adapters = set()
+    def merge_environment_settings(self, url, proxies, stream, verify, cert):
+        # Verification happens only once per connection so we need to close
+        # all the opened adapters once we're done. Otherwise, the effects of
+        # verify=False persist beyond the end of this context manager.
+        opened_adapters.add(self.get_adapter(url))
+        settings = old_merge_environment_settings(self, url, proxies, stream, verify, cert)
+        settings['verify'] = False
+        return settings
+    requests.Session.merge_environment_settings = merge_environment_settings
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', InsecureRequestWarning)
+            yield
+    finally:
+        requests.Session.merge_environment_settings = old_merge_environment_settings
+        for adapter in opened_adapters:
+            try:
+                adapter.close()
+            except:
+                pass
 
 if __name__ == '__main__':
     main()

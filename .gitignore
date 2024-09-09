@@ -7,3 +7,4 @@ __pycache__/*
 uris.pkl
 SynchronizationTest.ipynb
 requirements.txt
+wikibase_example_com.pem

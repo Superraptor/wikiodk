@@ -10,6 +10,7 @@ wikibase:
     - CirrusSearch
     - Elastica
   import:
+    - hhear_properties.ttl
     - cedar_inference_graph_2024_2.ttl
   adapter:
     default_lang: 'en'
