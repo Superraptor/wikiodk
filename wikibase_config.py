@@ -115,11 +115,17 @@ def get_sparql_endpoint(yaml_dict):
             port_no=docker_yaml_dict["services"]["wdqs-frontend"]["ports"][0]
             if ':' in port_no:
                 port_no=port_no.split(':')[0]
-        sparql_endpoint_url=yaml_dict['wikibase']['wikibase_public_host'] + ':' + port_no + sparql_endpoint
+        if port_no:
+            sparql_endpoint_url=yaml_dict['wikibase']['wikibase_public_host'] + ':' + port_no + sparql_endpoint
+        else:
+            sparql_endpoint_url=yaml_dict['wikibase']['wikibase_public_host'] + sparql_endpoint
         if sparql_endpoint_url.startswith('localhost'):
             sparql_endpoint_url="http://"+sparql_endpoint_url
         else:
-            sparql_endpoint_url="http://"+sparql_endpoint_url
+            with open("./target/"+yaml_dict['repo']+"/src/scripts/wikibase-release-pipeline/deploy/.env") as env_file:
+                for line in env_file:
+                    if line.startswith("WDQS_FRONTEND_PUBLIC_HOST="):
+                        sparql_endpoint_url = "http://" + (line.split("=")[1]).strip() + "/proxy/wdqs/bigdata/namespace/wdq/sparql"
     elif 'external_host' in yaml_dict['wikibase']:
         sparql_endpoint_url=yaml_dict['wikibase']['external_host'] + '/query/sparql'
     else:

@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import time
 import wikibase_config
+import wikibase_extensions
 import wikibase_import
 import yaml
 
@@ -53,6 +54,7 @@ def main():
     parser.add_argument('-visualize', default=False, action='store_true')
     parser.add_argument('-rebuild', default=False, action='store_true')
     parser.add_argument('-wqs', default=False, action='store_true')
+    parser.add_argument('-zotwb', default=False, action='store_true')
     args=parser.parse_args()
 
     # Read in YAML file.
@@ -76,7 +78,7 @@ def main():
         delete_configuration(deploy_dir)
 
         # Download Wikibase release pipeline.
-        download_wikibase_release_pipeline(repo)
+        download_wikibase_release_pipeline(repo, yaml_dict=yaml_dict, load_extensions_at_build=True)
 
         # Set up configuration template.
         set_up_configuration_template(deploy_dir, yaml_dict)
@@ -162,6 +164,15 @@ def main():
         # Run rebuild.
         run_rebuild()
 
+        # Export RDF from Wikibase instance.
+        export_rdf()
+
+        # Massage data in correct format for query service.
+        munge(yaml_dict)
+
+        # Import data into the query service.
+        load_data()
+
     elif args.tileserver:
 
         # Set up tileserver.
@@ -182,13 +193,16 @@ def main():
 
         # Import data into the query service.
         load_data()
+
+    elif args.zotwb:
+
+        install_zotwb(yaml_dict)
     
     else:
         run_docker_compose_stop(deploy_dir)
         run_docker_compose_down(deploy_dir)
         delete_configuration(deploy_dir)
-        download_wikibase_release_pipeline(repo)
-        #load_extensions(yaml_dict, install_at_build_time=True)
+        download_wikibase_release_pipeline(repo, yaml_dict=yaml_dict, load_extensions_at_build=True)
         delete_configuration(deploy_dir)
         set_up_configuration_template(deploy_dir, yaml_dict)
         run_docker_compose_up(deploy_dir, wait=True)
@@ -207,7 +221,7 @@ def make_modifications(yaml_dict, deploy_dir):
         replace_in_file(deploy_dir+"/.env", "WIKIBASE_PUBLIC_HOST=wikibase.example.com", "WIKIBASE_PUBLIC_HOST="+yaml_dict["wikibase"]["wikibase_public_host"])
 
 # Downloads the Wikibase Release Pipeline from GitHub.
-def download_wikibase_release_pipeline(repo):
+def download_wikibase_release_pipeline(repo, yaml_dict=None, load_extensions_at_build=True):
 
     wikibase_release_pipeline_dir="./target/"+str(repo)+"/src/scripts/wikibase-release-pipeline"
 
@@ -225,13 +239,18 @@ def download_wikibase_release_pipeline(repo):
         # Copy .gitattributes file.
         shutil.copy("./.gitattributes", wikibase_release_pipeline_dir+"/build/Wikibase/")
 
-        # Convert strings to Unix.
-        convert_crlf_to_lf.convert(str(wd))
+        # Load extensions if indicated. Note that this process also rebuilds the container,
+        # so you can skip the building step (hence the if-else)
+        if load_extensions_at_build and yaml_dict:
+            load_extensions(yaml_dict, install_at_build_time=True)
+        else:
+            # Convert strings to Unix.
+            convert_crlf_to_lf.convert(str(wd))
 
-        # Build Docker containers.
-        chdir(wikibase_release_pipeline_dir)
-        subprocess.run("./build.sh wikibase", shell=True)
-        chdir(wd)
+            # Build Docker containers.
+            chdir(wikibase_release_pipeline_dir)
+            subprocess.run("build.sh wikibase", shell=True)
+            chdir(wd)
 
         return deploy_dir
     
@@ -351,65 +370,44 @@ def install_composer():
 # Clone and load extensions.
 def load_extensions(yaml_dict, persist_on_host=True, install_at_build_time=True):
 
+    # This process is based on the system suggested here for deploy-3:
+    # https://phabricator.wikimedia.org/T372599
+    #
+    # The non-build time install does not currently function on the most
+    # recent version of the wikibase-release-pipeline.
     if install_at_build_time:
 
-        dockerfile_path = "./target/"+str(yaml_dict["repo"])+"/src/scripts/wikibase-release-pipeline/build/Wikibase/Dockerfile"
+        wikibase_release_pipeline_path = "./target/"+str(yaml_dict["repo"])+"/src/scripts/wikibase-release-pipeline"
+        dockerfile_path = wikibase_release_pipeline_path + "/build/Wikibase/Dockerfile"
         
         all_extensions_line = None
         all_extensions_list = []
-        dockerfile_str = None
-        new_dockerfile_str = None
 
-        # Open Dockerfile and read in current contents.
-        with open(dockerfile_path, "r") as f:
-            dockerfile_str = f.read()
-            new_dockerfile_str = dockerfile_str
-
-        # Open Dockerfile and determine which new contents to add.
-        with open(dockerfile_path, "r") as f:
-            dockerfile_lines = f.readlines()
-
-            # Get current extensions list.
-            for line in dockerfile_lines:
-                if line.startswith('ARG ALL_EXTENSIONS='):
-                    all_extensions_line = line
-            all_extensions_list = ((all_extensions_line.split('=')[1])[1:-2]).split(',')
-
-            # Get list of extensions to add.
-            extensions_to_add = []
-            for extension in yaml_dict['wikibase']['extensions']:
-                if extension not in all_extensions_list:
-                    extensions_to_add.append(extension)
-            extensions_to_add_str = ','.join(extensions_to_add)
-            new_all_extensions_line = all_extensions_line[:-2] + ',' + extensions_to_add_str + '"' + "\n"
-            new_dockerfile_str = dockerfile_str.replace(all_extensions_line, new_all_extensions_line)
-
-            # Format new extension additions.
-            new_arg_lines = []
-            for extension in extensions_to_add:
-                uppercase_extension = extension.upper()
-                extension_arg = "ARG " + uppercase_extension + "_COMMIT"
-                new_arg_lines.append(extension_arg)
-            new_arg_lines_str = "\n".join(new_arg_lines)
-
-            final_extension_arg = "ARG " + (all_extensions_list[-1]).upper() + "_COMMIT"
-            new_dockerfile_lines = new_dockerfile_str.split('\n')
-            for counter, line in enumerate(new_dockerfile_lines):
-                if line == final_extension_arg:
-                    new_dockerfile_lines[counter] += "\n" + new_arg_lines_str
-
-            new_dockerfile_str = "\n".join(new_dockerfile_lines)
+        # Add extension(s) to build file (./variable.env)
+            # Get Gerrit link, e.g.: https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/WikibaseLexeme/+/refs/heads/REL1_42
+            # Get commit, e.g.: 996bb21eff34c1e05148f36dbdb38c7934bae4e5
+        wikibase_extensions.modify_variables_env(yaml_dict)
 
         # Write Dockerfile with added extensions.
-        with open(dockerfile_path, 'w') as f:
-            f.write(new_dockerfile_str)
+        wikibase_extensions.modify_dockerfile(yaml_dict)
+
+        # Write build.sh with added extensions.
+        wikibase_extensions.modify_build_sh(yaml_dict)
+
+        # Add LocalSettings.php fragment(s).
+            # Make file of the form: /build/Wikibase/LocalSettings.d/50_WikibaseLexeme.php
+                # Loaded in alphabetical order; can control via the prefix (so all added extensions can be 50 to be
+                # in the correct load order unless there are other requirements).
+        wikibase_extensions.modify_localsettings(yaml_dict)
 
         # Rebuild the Wikibase containers only.
         # Note: This will spawn a second process in another window; it will take
         # time to complete, but should be less than 10 minutes.
-        chdir("./target/"+str(yaml_dict["repo"])+"/src/scripts/wikibase-release-pipeline/")
-        subprocess.run("build.sh wikibase", shell=True)
+        wikibase_extensions.rebuild_wikibase_container(yaml_dict)
         chdir(wd)
+
+        # Adjust docker-compose.yml.
+        wikibase_extensions.modify_docker_compose_yml(yaml_dict)
 
     else:
 
@@ -558,5 +556,9 @@ def load_data():
     # Adapted from: https://thisismattmiller.com/post/migrating-your-docker-wikibase/
     subprocess.run('docker exec wbs-deploy-wdqs-1 //bin//bash -c "./loadData.sh -n wdq -d /wdqs/"', shell=True)
 
+def install_zotwb():
+    print()
+    # https://github.com/dlindem/zotwb
+    
 if __name__ == '__main__':
     main()
