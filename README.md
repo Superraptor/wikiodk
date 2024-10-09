@@ -25,13 +25,14 @@ Next steps are to get additional extensions fully functional; however, it should
 Via Windows PowerShell:
 
 1. Open the file `C:\Windows\System32\drivers\etc\hosts` in Notepad as administrator.
-2. Add the line `127.0.0.1 wikibase.example.com` to the file. Save and close. See [here](https://phabricator.wikimedia.org/T372177) for more information.
-2. Make sure you have the latest version of ODK by running `docker pull obolibrary/odkfull`. See [here](https://oboacademy.github.io/obook/howto/odk-create-repo/) for more information.
-3. Make sure Docker is up and running.
-4. Create an Anaconda environment as follows: `conda create -n {ENVIRONMENT_NAME} python=3.7.16`.
-5. Activate the environment: `conda activate {ENVIRONMENT_NAME}`.
-6. Run `.\seed-via-docker.bat -C project.yaml` in this directory.
-7. Open a web browser. Go to `localhost:8880`. Note that the browser will say the instance is unsafe but you can proceed without issue (see [here](https://github.com/wmde/wikibase-release-pipeline/tree/main/deploy#can-i-host-wikibase-suite-locally) for more details as to why this happens).
+2. Add the line `127.0.0.1 wikibase.example.com` to the file. Save. See [here](https://phabricator.wikimedia.org/T372177) for more information.
+3. Add the line `127.0.0.1 wdqs-frontend.example.com` to the file. Save and close. See [here](https://phabricator.wikimedia.org/T375386) for more information.
+4. Make sure you have the latest version of ODK by running `docker pull obolibrary/odkfull`. See [here](https://oboacademy.github.io/obook/howto/odk-create-repo/) for more information.
+5. Make sure Docker is up and running.
+6. Create an Anaconda environment as follows: `conda create -n {ENVIRONMENT_NAME} python=3.7.16`.
+7. Activate the environment: `conda activate {ENVIRONMENT_NAME}`.
+8. Run `.\seed-via-docker.bat -C project.yaml` in this directory.
+9. Open a web browser. Go to `localhost:8880`. Note that the browser will say the instance is unsafe but you can proceed without issue (see [here](https://github.com/wmde/wikibase-release-pipeline/tree/main/deploy#can-i-host-wikibase-suite-locally) for more details as to why this happens).
 
 #### Wikibase XML Download and Upload
 

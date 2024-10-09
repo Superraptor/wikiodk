@@ -9,6 +9,7 @@ wikibase:
   extensions:
     - CirrusSearch
     - Elastica
+    - WikibaseLexeme
   import:
     - hhear_properties.ttl
     - cedar_inference_graph_2024_2.ttl
