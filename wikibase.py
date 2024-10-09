@@ -139,8 +139,14 @@ def main():
         install_rdfsync(yaml_dict)
 
     elif args.load_extensions:
+        run_docker_compose_stop(deploy_dir)
+        run_docker_compose_down(deploy_dir)
+        delete_configuration(deploy_dir)
+
         # Load Wikibase extensions.
         load_extensions(yaml_dict)
+
+        run_docker_compose_up(deploy_dir, wait=True)
 
     elif args.import_files:
         # Install packages if necessary.
@@ -522,10 +528,16 @@ def install_rdfsync(yaml_dict):
     subprocess.run("python setup.py install", shell=True)
     chdir(wd)
 
-def set_up_tileserver(repo):
+# TODO: Add a system for automatically checking and taking down
+# the tileserver when starting over.
+def set_up_tileserver(repo, interactive=False):
     tileserver_data = dockerfile_path = "./target/"+repo+"/src/scripts/tileserver-gl"
     os.makedirs(tileserver_data, exist_ok=True)
-    subprocess.run("docker run --rm -it -v %s/data -p 8080:8080 maptiler/tileserver-gl" % tileserver_data, shell=True)
+    if interactive:
+        subprocess.run("docker run --rm -it -v %s/data -p 8080:8080 maptiler/tileserver-gl" % tileserver_data, shell=True)
+    else:
+        subprocess.run("docker run --rm -d -v %s/data -p 8080:8080 maptiler/tileserver-gl" % tileserver_data, shell=True)
+
 
 def set_up_visualizer(visualizer='KinGVisher'):
     if visualizer.lower() == 'kingvisher':

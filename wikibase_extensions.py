@@ -88,7 +88,7 @@ def modify_variables_env(yaml_dict):
 
     new_last_variable_line_str = last_variable_line_str
     for extension, extension_sub_dict in extensions_to_add_dict.items():
-        new_last_variable_line_str += extension_sub_dict['gerrit_line'] + "\n" + commit_line + "\n"
+        new_last_variable_line_str += extension_sub_dict['gerrit_line'] + "\n" + extension_sub_dict['commit_line'] + "\n"
 
     # Write new lines to variables.env.
     new_variables_env_str = variables_env_str.replace(last_variable_line_str, new_last_variable_line_str)
@@ -210,7 +210,7 @@ def modify_build_sh(yaml_dict):
     with open(build_sh_path, 'w', encoding="utf8") as f:
         f.write(new_build_sh_str)
 
-def modify_localsettings(yaml_dict):
+def modify_localsettings(yaml_dict, kartographer_map_server="http://localhost:8080"):
     wikibase_release_pipeline_path = "./target/"+str(yaml_dict["repo"])+"/src/scripts/wikibase-release-pipeline"
     localsettings_dir_path = wikibase_release_pipeline_path + "/build/Wikibase/LocalSettings.d"
 
@@ -231,9 +231,20 @@ def modify_localsettings(yaml_dict):
             if extension == "Kartographer":
                 extension_order_prefix = "60_"
                 extension_file_content = ("<?php\n\n# " + "".join(camel_case_split(extension)) + "\n" + "wfLoadExtension( '" + extension + "' );" + "\n" +
-                    "$wgKartographerMapServer = 'http://localhost:8080';" + "\n" + "$wgKartographerDfltStyle = '';" + "\n" +
-                    "$wgKartographerSrcsetScales = [1];" + "\n" + "$wgKartographerStyles = [];" + "\n" +
-                    "$wgKartographerUseMarkerStyle = true;" + "\n" + "$wgWBRepoSettings['useKartographerGlobeCoordinateFormatter'] = true;")
+                    "$wgKartographerMapServer = '" + kartographer_map_server + "/styles/basic-preview/512/{{z}}/{{x}}/{{y}}.png" + "';" + "\n" + 
+                    "$wgKartographerUsePageLanguage = true;" + "\n" + 
+                    "$wgKartographerEnableMapFrame = true;" + "\n" + 
+                    "$wgKartographerEnableMapLinks = true;" + "\n" + 
+                    "$wgKartographerDfltTileServer = 'local';" + "\n" + 
+                    "$wgKartographerDfltStyle = '';" + "\n" +
+                    "$wgKartographerSrcsetScales = [1];" + "\n" + 
+                    "$wgKartographerStyles = [];" + "\n" +
+                    "$wgKartographerUseMarkerStyle = true;" + "\n" + 
+                    "$wgWBRepoSettings['useKartographerGlobeCoordinateFormatter'] = true;")
+            elif extension == "GeoData":
+                extension_order_prefix = "70_"
+                extension_file_content = ("<?php\n\n# " + "".join(camel_case_split(extension)) + "\n" + "wfLoadExtension( '" + extension + "' );" + "\n" +
+                    "$wgUseGeoData = true;")
             else:
                 extension_order_prefix = "50_"
                 extension_file_content = "<?php\n\n# " + "".join(camel_case_split(extension)) + "\n" + "wfLoadExtension( '" + extension + "' );"
