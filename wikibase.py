@@ -370,6 +370,11 @@ def install_composer():
 # Clone and load extensions.
 def load_extensions(yaml_dict, persist_on_host=True, install_at_build_time=True):
 
+    kartographer = False
+    if "Kartographer" in yaml_dict['wikibase']['extensions']:
+        set_up_tileserver(yaml_dict["repo"])
+        kartographer = True
+
     # This process is based on the system suggested here for deploy-3:
     # https://phabricator.wikimedia.org/T372599
     #
@@ -378,10 +383,6 @@ def load_extensions(yaml_dict, persist_on_host=True, install_at_build_time=True)
     if install_at_build_time:
 
         wikibase_release_pipeline_path = "./target/"+str(yaml_dict["repo"])+"/src/scripts/wikibase-release-pipeline"
-        dockerfile_path = wikibase_release_pipeline_path + "/build/Wikibase/Dockerfile"
-        
-        all_extensions_line = None
-        all_extensions_list = []
 
         # Add extension(s) to build file (./variable.env)
             # Get Gerrit link, e.g.: https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/WikibaseLexeme/+/refs/heads/REL1_42
