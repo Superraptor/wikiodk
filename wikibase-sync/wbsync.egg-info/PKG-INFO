@@ -1,0 +1,50 @@
+Metadata-Version: 2.2
+Name: wbsync
+Version: 0.1.4
+Home-page: https://github.com/weso/rdf-wb-sync
+Author: Alejandro González Hevia, Othmane Bakhtaoui, Enrique J Rodriguez, Angel García-Menéndez
+Author-email: alejandrgh11@gmail.com, b.othmane98@live.fr, rodriguezmenrique@uniovi.es, garciamenangel@uniovi.es
+License: MIT
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests==2.32.3
+Requires-Dist: rdflib==7.1.3
+Requires-Dist: ontospy==2.1.1
+Requires-Dist: PyGithub==2.5.0
+Requires-Dist: pytest~=8.3.4
+Requires-Dist: python-dateutil~=2.9.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+
+# wikibase-sync
+tools and algorithms for synchronization between rdf ontologies and wikibase instances.
+
+[![License](https://img.shields.io/github/license/weso/wikibase-sync)](https://github.com/weso/wikibase-sync/blob/master/LICENSE)
+[![Build Status](https://travis-ci.com/weso/wikibase-sync.svg?branch=master)](https://travis-ci.com/weso/wikibase-sync)
+[![Coverage Status](https://codecov.io/gh/weso/wikibase-sync/branch/master/graph/badge.svg)](https://codecov.io/gh/weso/wikibase-sync)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/weso/wikibase-sync)
+
+## rdfsync
+the algorithms for synchronizing your RDF ontology from the changes made in wikibase.
+
+## wbsync
+the algorithms for synchronizing your wikibase instance from the changes made in an RDF ontology.
+
+## How to install
+You can install it manually from the source code:
+```bash
+git clone https://github.com/weso/wikibase-sync
+cd wikibase-sync
+python setup.py install
+```
+
+Python 3.7+ is required.

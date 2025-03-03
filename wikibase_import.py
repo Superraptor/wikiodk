@@ -22,11 +22,12 @@ from pathlib import Path
 from rdflib.namespace import OWL, RDF, RDFS
 from urllib3.exceptions import InsecureRequestWarning
 
+from wikibase_config import get_api_endpoint, get_sparql_endpoint
+from wikidataintegrator.wdi_config import config as wikidata_integrator_config
+sys.path.append('wikibase-sync/wbsync')
 from wbsync.external.uri_factory import URIFactoryMock
 from wbsync.triplestore import WikibaseAdapter
 from wbsync.synchronization import GraphDiffSyncAlgorithm, OntologySynchronizer
-from wikibase_config import get_api_endpoint, get_sparql_endpoint
-from wikidataintegrator.wdi_config import config as wikidata_integrator_config
 
 old_merge_environment_settings = requests.Session.merge_environment_settings
 
